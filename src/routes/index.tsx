@@ -1,181 +1,341 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Mail, Send, Github, Twitter, ArrowRight } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { motion, useScroll, useTransform, useSpring, type MotionValue } from "framer-motion";
+import { Send, Mail, Github, ArrowUpRight, Code2, Layers, Database, Sparkles, Play } from "lucide-react";
 import { LoopVideo } from "@/components/LoopVideo";
-import { useScrollY } from "@/hooks/useParallax";
 
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
+const TELEGRAM = "https://t.me/Darkbhaifan";
+
 const VIDEOS = {
   hero: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260331_045634_e1c98c76-1265-4f5c-882a-4276f2080894.mp4",
   about: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260331_151551_992053d1-3d3e-4b8c-abac-45f22158f411.mp4",
-  cinema: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260328_083109_283f3553-e28f-428b-a723-d639c617eb2b.mp4",
   cta: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260331_055729_72d66327-b59e-4ae9-bb70-de6ccb5ecdb0.mp4",
-  work1: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260331_053923_22c0a6a5-313c-474c-85ff-3b50d25e944a.mp4",
-  work2: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260331_054411_511c1b7a-fb2f-42ef-bf6c-32c0b1a06e79.mp4",
-  work3: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260331_055427_ac7035b5-9f3b-4289-86fc-941b2432317d.mp4",
 };
 
-const TELEGRAM = "https://t.me/Darkbhaifan";
+// ---------- Smooth parallax helpers ----------
+function useSmoothScroll() {
+  const { scrollY } = useScroll();
+  return useSpring(scrollY, { stiffness: 90, damping: 24, mass: 0.4 });
+}
 
-function SocialStack({ className = "" }: { className?: string }) {
-  const items = [
-    { href: TELEGRAM, icon: Send, label: "Telegram" },
-    { href: "mailto:hello@rahul.dev", icon: Mail, label: "Email" },
-    { href: "https://github.com", icon: Github, label: "GitHub" },
-  ];
+function Parallax({
+  y,
+  speed = 0.3,
+  children,
+  className = "",
+}: {
+  y: MotionValue<number>;
+  speed?: number;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  const translate = useTransform(y, (v) => v * speed);
   return (
-    <div className={`liquid-glass rounded-2xl flex flex-col ${className}`}>
-      {items.map((it, i) => (
-        <a
-          key={it.label}
-          href={it.href}
-          target="_blank"
-          rel="noreferrer"
-          aria-label={it.label}
-          className={`flex items-center justify-center w-14 h-14 transition hover:bg-white/10 ${
-            i < items.length - 1 ? "border-b border-white/10" : ""
+    <motion.div style={{ y: translate }} className={className}>
+      {children}
+    </motion.div>
+  );
+}
+
+// ---------- Navbar ----------
+function Navbar() {
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const on = () => setScrolled(window.scrollY > 20);
+    on();
+    window.addEventListener("scroll", on, { passive: true });
+    return () => window.removeEventListener("scroll", on);
+  }, []);
+
+  const links = [
+    { label: "Work", href: "#work" },
+    { label: "About", href: "#about" },
+    { label: "Stack", href: "#stack" },
+    { label: "Contact", href: "#contact" },
+  ];
+
+  return (
+    <motion.header
+      initial={{ y: -30, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${
+        scrolled ? "py-3" : "py-5"
+      }`}
+    >
+      <div
+        className={`mx-auto max-w-6xl px-4 sm:px-6 transition-all duration-500 ${
+          scrolled ? "scale-[0.98]" : ""
+        }`}
+      >
+        <div
+          className={`flex items-center justify-between rounded-full px-4 sm:px-6 py-3 ${
+            scrolled
+              ? "bg-black/60 backdrop-blur-xl border border-white/10"
+              : "bg-transparent"
           }`}
         >
-          <it.icon size={20} className="text-cream" />
-        </a>
-      ))}
-    </div>
-  );
-}
+          <a href="#" className="flex items-center gap-2 text-cream">
+            <span className="font-grotesk uppercase text-base tracking-widest">Rahul</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-neon shadow-[0_0_12px_#6FFF00]" />
+          </a>
 
-function Nav() {
-  const links = ["Home", "Work", "About", "Journal", "Contact"];
-  return (
-    <header className="absolute top-0 left-0 right-0 z-30 px-5 sm:px-8 pt-6 flex items-center justify-between max-w-[1831px] mx-auto">
-      <div className="font-grotesk text-[15px] sm:text-base uppercase tracking-wider text-cream">
-        Rahul<span className="text-neon">.</span>Studio
-      </div>
-      <nav className="hidden lg:block liquid-glass rounded-[28px] px-[52px] py-[18px]">
-        <ul className="flex items-center gap-10">
-          {links.map((l) => (
-            <li key={l}>
+          <nav className="hidden md:flex items-center gap-1">
+            {links.map((l) => (
               <a
-                href={`#${l.toLowerCase()}`}
-                className="font-grotesk text-[13px] uppercase tracking-widest text-cream hover:text-neon transition-colors"
+                key={l.href}
+                href={l.href}
+                className="px-4 py-2 rounded-full font-mono text-[11px] uppercase tracking-widest text-cream/70 hover:text-neon hover:bg-white/5 transition"
               >
-                {l}
+                {l.label}
               </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
-      <a
-        href={TELEGRAM}
-        target="_blank"
-        rel="noreferrer"
-        className="hidden sm:inline-flex liquid-glass rounded-full px-5 py-2.5 font-grotesk text-[12px] uppercase tracking-widest text-cream hover:text-neon transition"
-      >
-        Let's talk
-      </a>
-    </header>
+            ))}
+          </nav>
+
+          <a
+            href={TELEGRAM}
+            target="_blank"
+            rel="noreferrer"
+            className="group inline-flex items-center gap-2 rounded-full bg-cream text-[#010828] px-4 sm:px-5 py-2 font-grotesk text-[11px] uppercase tracking-widest hover:bg-neon transition"
+          >
+            <span className="hidden sm:inline">Let's talk</span>
+            <span className="sm:hidden">Talk</span>
+            <ArrowUpRight size={14} className="group-hover:rotate-45 transition-transform" />
+          </a>
+        </div>
+      </div>
+    </motion.header>
   );
 }
 
-function Hero() {
-  const y = useScrollY();
+// ---------- Hero ----------
+function Hero({ y }: { y: MotionValue<number> }) {
+  const videoY = useTransform(y, (v) => v * 0.35);
+  const videoScale = useTransform(y, [0, 800], [1, 1.15]);
+  const contentY = useTransform(y, (v) => v * -0.15);
+  const contentOpacity = useTransform(y, [0, 500], [1, 0]);
+
+  const stagger = {
+    hidden: { opacity: 0, y: 24 },
+    show: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: 0.15 + i * 0.1, duration: 0.7, ease: [0.22, 1, 0.36, 1] as const },
+    }),
+  } satisfies import("framer-motion").Variants;
+
   return (
-    <section id="home" className="relative min-h-screen w-full overflow-hidden rounded-b-[32px]">
-      {/* Parallax video */}
-      <div
+    <section id="home" className="relative min-h-screen w-full overflow-hidden">
+      {/* Parallax video bg */}
+      <motion.div
+        style={{ y: videoY, scale: videoScale }}
         className="absolute inset-0 will-change-transform"
-        style={{ transform: `translate3d(0, ${y * 0.35}px, 0) scale(${1 + y * 0.0003})` }}
       >
         <LoopVideo src={VIDEOS.hero} className="w-full h-full" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#010828]/40 via-transparent to-[#010828]" />
-      </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-[#010828]/40 to-[#010828]" />
+      </motion.div>
 
-      <Nav />
+      <motion.div
+        style={{ y: contentY, opacity: contentOpacity }}
+        className="relative z-10 max-w-6xl mx-auto px-5 sm:px-8 pt-36 sm:pt-44 pb-24 text-center flex flex-col items-center"
+      >
+        <motion.div
+          variants={stagger}
+          custom={0}
+          initial="hidden"
+          animate="show"
+          className="inline-flex items-center gap-2 rounded-full liquid-glass px-4 py-1.5 font-mono text-[10px] sm:text-[11px] uppercase tracking-widest text-cream/80"
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-neon animate-pulse" />
+          Open for freelance · 2026
+        </motion.div>
 
-      <div className="relative z-10 max-w-[1831px] mx-auto px-5 sm:px-8 pt-40 sm:pt-48 lg:pt-56 pb-24">
-        <div className="relative max-w-[820px] lg:ml-24">
-          <h1 className="font-grotesk uppercase text-cream text-[44px] sm:text-[64px] md:text-[80px] lg:text-[96px] leading-[0.95] tracking-tight animate-fade-rise">
-            Beyond pixels<br />
-            <span className="opacity-90">i build the</span> eternal
-          </h1>
-          <span className="absolute -top-6 right-0 sm:right-6 lg:-right-10 font-condiment text-neon text-[28px] sm:text-[40px] lg:text-[56px] mix-exclusion opacity-90 -rotate-[4deg] animate-fade-rise-delay">
-            portfolio
-          </span>
-        </div>
+        <motion.h1
+          variants={stagger}
+          custom={1}
+          initial="hidden"
+          animate="show"
+          className="mt-8 font-grotesk uppercase text-cream text-[44px] sm:text-[72px] md:text-[96px] lg:text-[112px] leading-[0.92] tracking-[-0.02em] max-w-5xl"
+        >
+          Full-stack dev<br />
+          <span className="font-condiment normal-case text-neon mix-exclusion -tracking-normal">
+            building
+          </span>{" "}
+          quiet products
+        </motion.h1>
 
-        <p className="font-mono text-[13px] sm:text-[14px] uppercase text-cream/80 mt-10 max-w-md leading-relaxed animate-fade-rise-delay">
-          I'm <span className="text-neon">Rahul</span> — a designer & maker
-          crafting cinematic interfaces, brand systems, and quiet digital worlds.
-        </p>
+        <motion.p
+          variants={stagger}
+          custom={2}
+          initial="hidden"
+          animate="show"
+          className="mt-7 font-mono text-[12px] sm:text-sm uppercase text-cream/65 max-w-xl leading-relaxed"
+        >
+          I'm Rahul — I design, ship and scale web products end-to-end.
+          From pixel-perfect UI to APIs, databases & deploys.
+        </motion.p>
 
-        <div className="mt-12 flex flex-wrap items-center gap-4 animate-fade-rise-delay-2">
+        <motion.div
+          variants={stagger}
+          custom={3}
+          initial="hidden"
+          animate="show"
+          className="mt-10 flex flex-wrap items-center justify-center gap-3"
+        >
           <a
             href="#work"
-            className="inline-flex items-center gap-2 bg-neon text-[#010828] font-grotesk uppercase text-sm tracking-widest rounded-full px-8 py-4 hover:scale-[1.03] transition"
+            className="inline-flex items-center gap-2 bg-neon text-[#010828] font-grotesk uppercase text-xs sm:text-sm tracking-widest rounded-full px-6 sm:px-7 py-3.5 hover:scale-[1.03] transition"
           >
-            See the work <ArrowRight size={16} />
+            See the work <ArrowUpRight size={16} />
           </a>
           <a
             href={TELEGRAM}
             target="_blank"
             rel="noreferrer"
-            className="liquid-glass rounded-full px-8 py-4 font-grotesk uppercase text-sm tracking-widest text-cream hover:text-neon transition"
+            className="liquid-glass inline-flex items-center gap-2 rounded-full px-6 sm:px-7 py-3.5 font-grotesk uppercase text-xs sm:text-sm tracking-widest text-cream hover:text-neon transition"
           >
-            Telegram →
+            <Play size={14} fill="currentColor" /> Telegram
           </a>
-        </div>
-      </div>
+        </motion.div>
 
-      {/* Desktop social stack */}
-      <div className="hidden lg:block absolute top-32 right-8 z-20">
-        <SocialStack />
-      </div>
+        {/* Stack marquee */}
+        <motion.div
+          variants={stagger}
+          custom={4}
+          initial="hidden"
+          animate="show"
+          className="mt-20 sm:mt-24 w-full max-w-3xl"
+        >
+          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-cream/40 mb-5">
+            Daily drivers
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-x-8 sm:gap-x-12 gap-y-3 font-grotesk uppercase text-sm sm:text-base text-cream/40">
+            {["React", "Next.js", "TypeScript", "Node", "Postgres", "Tailwind", "AWS"].map(
+              (t) => (
+                <span key={t} className="hover:text-cream transition-colors">
+                  {t}
+                </span>
+              ),
+            )}
+          </div>
+        </motion.div>
+      </motion.div>
+
+      {/* Scroll cue */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2, duration: 0.8 }}
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
+      >
+        <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-cream/40">
+          Scroll
+        </span>
+        <motion.div
+          animate={{ y: [0, 8, 0] }}
+          transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
+          className="w-px h-8 bg-gradient-to-b from-cream/40 to-transparent"
+        />
+      </motion.div>
     </section>
   );
 }
 
-function About() {
-  const y = useScrollY();
-  return (
-    <section id="about" className="relative w-full overflow-hidden rounded-[32px] mt-6">
-      <div
-        className="absolute inset-0 will-change-transform"
-        style={{ transform: `translate3d(0, ${(y - 600) * 0.15}px, 0)` }}
-      >
-        <LoopVideo src={VIDEOS.about} className="w-full h-full" />
-        <div className="absolute inset-0 bg-[#010828]/40" />
-      </div>
+// ---------- About ----------
+function About({ y }: { y: MotionValue<number> }) {
+  const videoY = useTransform(y, [600, 1800], [120, -120]);
 
-      <div className="relative max-w-[1831px] mx-auto px-5 sm:px-8 py-20 sm:py-28 lg:py-36">
-        <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-start">
-          <div className="relative">
-            <h2 className="font-grotesk uppercase text-cream text-[40px] sm:text-[54px] lg:text-[68px] leading-[1]">
-              Hello!<br />I'm Rahul
-            </h2>
-            <span className="absolute -bottom-4 right-0 sm:-right-8 font-condiment text-neon text-[42px] sm:text-[58px] mix-exclusion -rotate-[6deg]">
-              Rahul
-            </span>
-          </div>
-          <p className="font-mono text-[13px] sm:text-[15px] uppercase text-cream max-w-md leading-relaxed">
-            A maker fixed somewhere between code and craft. Exploring distance,
-            form, and silence — building digital havens for deep work and
-            pure flows.
-          </p>
+  return (
+    <section id="about" className="relative w-full overflow-hidden py-32 sm:py-44">
+      <motion.div
+        style={{ y: videoY }}
+        className="absolute inset-0 -top-32 -bottom-32 will-change-transform"
+      >
+        <LoopVideo src={VIDEOS.about} className="w-full h-full opacity-50" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#010828] via-[#010828]/60 to-[#010828]" />
+      </motion.div>
+
+      <div className="relative max-w-6xl mx-auto px-5 sm:px-8">
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.6 }}
+          transition={{ duration: 0.7 }}
+          className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.3em] text-neon mb-6"
+        >
+          01 — About
+        </motion.p>
+
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] as const }}
+          className="font-grotesk uppercase text-cream text-[36px] sm:text-[56px] lg:text-[72px] leading-[1] max-w-4xl"
+        >
+          A full-stack dev who treats the{" "}
+          <span className="font-condiment normal-case text-neon mix-exclusion">
+            entire stack
+          </span>{" "}
+          as one craft.
+        </motion.h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 sm:gap-16 mt-16">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            className="font-mono text-[13px] sm:text-[15px] leading-relaxed text-cream/80"
+          >
+            I'm Rahul — a self-taught full-stack engineer with 6+ years shipping web
+            products. I live in the seam between design and engineering: pushing pixels,
+            tuning queries, automating deploys, and obsessing over the small moments
+            that make software feel calm.
+          </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="font-mono text-[13px] sm:text-[15px] leading-relaxed text-cream/60"
+          >
+            Today I build SaaS dashboards, AI-powered tools, and product surfaces for
+            founders & small teams. Quiet code, fast ships, no drama — pinged on
+            <a href={TELEGRAM} target="_blank" rel="noreferrer" className="text-neon hover:underline ml-1">
+              Telegram
+            </a>{" "}
+            when something interesting comes up.
+          </motion.p>
         </div>
 
-        <div className="mt-24 grid grid-cols-1 sm:grid-cols-3 gap-6">
+        {/* Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-white/10 mt-20 rounded-2xl overflow-hidden">
           {[
-            { k: "06", v: "Years crafting" },
-            { k: "40+", v: "Shipped projects" },
-            { k: "12", v: "Awwwards / mentions" },
-          ].map((s) => (
-            <div key={s.k} className="liquid-glass rounded-[24px] p-8">
-              <div className="font-grotesk text-cream text-[44px] sm:text-[56px] leading-none">
+            { k: "6+", v: "Years building" },
+            { k: "40+", v: "Products shipped" },
+            { k: "12", v: "Open-source repos" },
+            { k: "∞", v: "Coffees brewed" },
+          ].map((s, i) => (
+            <motion.div
+              key={s.v}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.08 }}
+              className="bg-[#010828] p-6 sm:p-8"
+            >
+              <div className="font-grotesk text-cream text-[36px] sm:text-[52px] leading-none">
                 {s.k}
               </div>
-              <div className="font-mono text-[12px] uppercase text-cream/70 mt-3">{s.v}</div>
-            </div>
+              <div className="font-mono text-[10px] sm:text-[11px] uppercase tracking-widest text-cream/50 mt-3">
+                {s.v}
+              </div>
+            </motion.div>
           ))}
         </div>
       </div>
@@ -183,59 +343,154 @@ function About() {
   );
 }
 
-function Work() {
+// ---------- Stack / Services ----------
+function Stack() {
   const items = [
-    { src: VIDEOS.work1, title: "Aethera UI", score: "8.7" },
-    { src: VIDEOS.work2, title: "Orbis Brand", score: "9.0" },
-    { src: VIDEOS.work3, title: "Signal OS", score: "8.2" },
+    {
+      icon: Layers,
+      title: "Frontend",
+      desc: "React, Next.js, TypeScript, Tailwind, Framer Motion. Pixel-perfect, fast, accessible.",
+      tags: ["React", "Next.js", "Tailwind", "Framer"],
+    },
+    {
+      icon: Database,
+      title: "Backend & data",
+      desc: "Node, Postgres, Supabase, Redis. Clean APIs, sane schemas, real-time when needed.",
+      tags: ["Node", "Postgres", "Supabase", "tRPC"],
+    },
+    {
+      icon: Sparkles,
+      title: "AI & automation",
+      desc: "OpenAI, vector search, custom agents. Wiring LLMs into real product workflows.",
+      tags: ["OpenAI", "RAG", "LangChain", "Agents"],
+    },
+    {
+      icon: Code2,
+      title: "Ship & scale",
+      desc: "Vercel, Cloudflare, AWS, CI/CD. From localhost to a million requests, calmly.",
+      tags: ["Vercel", "AWS", "Docker", "CI/CD"],
+    },
   ];
+
   return (
-    <section id="work" className="relative bg-space mt-6 rounded-[32px]">
-      <div className="max-w-[1831px] mx-auto px-5 sm:px-8 py-24 sm:py-32">
-        <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-10 mb-16">
-          <h2 className="font-grotesk uppercase text-cream text-[40px] sm:text-[54px] lg:text-[68px] leading-[1]">
-            Collection of<br />
-            <span className="block ml-12 sm:ml-20 lg:ml-32">
-              <span className="font-condiment text-neon normal-case mix-exclusion">Space</span> objects
-            </span>
-          </h2>
-          <a href="#contact" className="group inline-block">
-            <div className="flex items-end gap-3">
-              <span className="font-grotesk uppercase text-cream text-[36px] sm:text-[52px] leading-none group-hover:text-neon transition">See</span>
-              <div className="flex flex-col font-grotesk uppercase text-cream text-[18px] sm:text-[28px] leading-none">
-                <span>All</span>
-                <span>Projects</span>
-              </div>
-            </div>
-            <div className="bg-neon h-[6px] sm:h-[8px] w-full mt-3 group-hover:h-[12px] transition-all" />
-          </a>
+    <section id="stack" className="relative bg-space py-28 sm:py-40">
+      <div className="max-w-6xl mx-auto px-5 sm:px-8">
+        <div className="flex items-end justify-between gap-6 mb-16">
+          <div>
+            <p className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.3em] text-neon mb-5">
+              02 — Stack
+            </p>
+            <h2 className="font-grotesk uppercase text-cream text-[36px] sm:text-[56px] lg:text-[72px] leading-[1] max-w-3xl">
+              End-to-end,{" "}
+              <span className="font-condiment normal-case text-neon mix-exclusion">
+                honestly
+              </span>
+              .
+            </h2>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {items.map((it) => (
-            <article key={it.title} className="liquid-glass rounded-[32px] p-[18px] hover:bg-white/[0.04] transition group">
-              <div className="relative w-full pb-[100%] rounded-[24px] overflow-hidden">
-                <LoopVideo
-                  src={it.src}
-                  className="absolute inset-0 w-full h-full group-hover:scale-105 transition-transform duration-700"
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+          {items.map((it, i) => (
+            <motion.article
+              key={it.title}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.7, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] as const }}
+              className="liquid-glass rounded-3xl p-7 sm:p-9 hover:bg-white/[0.04] transition group"
+            >
+              <div className="flex items-center justify-between">
+                <div className="w-11 h-11 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-neon">
+                  <it.icon size={20} />
+                </div>
+                <span className="font-mono text-[10px] uppercase tracking-widest text-cream/40">
+                  0{i + 1}
+                </span>
+              </div>
+              <h3 className="font-grotesk uppercase text-cream text-2xl sm:text-3xl mt-6">
+                {it.title}
+              </h3>
+              <p className="font-mono text-[13px] leading-relaxed text-cream/60 mt-3">
+                {it.desc}
+              </p>
+              <div className="flex flex-wrap gap-2 mt-6">
+                {it.tags.map((t) => (
+                  <span
+                    key={t}
+                    className="font-mono text-[10px] uppercase tracking-widest text-cream/60 border border-white/10 rounded-full px-3 py-1"
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </motion.article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ---------- Work ----------
+function Work() {
+  const projects = [
+    { n: "01", title: "Aethera UI", tag: "SaaS dashboard", year: "2026" },
+    { n: "02", title: "Orbis Brand", tag: "Product site + CMS", year: "2025" },
+    { n: "03", title: "Signal OS", tag: "AI agent platform", year: "2025" },
+    { n: "04", title: "Lumen Pay", tag: "Fintech onboarding", year: "2024" },
+  ];
+
+  return (
+    <section id="work" className="relative bg-space py-28 sm:py-40">
+      <div className="max-w-6xl mx-auto px-5 sm:px-8">
+        <p className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.3em] text-neon mb-5">
+          03 — Selected work
+        </p>
+        <h2 className="font-grotesk uppercase text-cream text-[36px] sm:text-[56px] lg:text-[72px] leading-[1] max-w-3xl mb-16">
+          Recent things i{" "}
+          <span className="font-condiment normal-case text-neon mix-exclusion">
+            shipped
+          </span>
+          .
+        </h2>
+
+        <div className="divide-y divide-white/10 border-y border-white/10">
+          {projects.map((p, i) => (
+            <motion.a
+              key={p.n}
+              href={TELEGRAM}
+              target="_blank"
+              rel="noreferrer"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.4 }}
+              transition={{ duration: 0.6, delay: i * 0.06 }}
+              className="group flex items-center justify-between py-6 sm:py-8 gap-4 hover:px-2 transition-all duration-500"
+            >
+              <div className="flex items-center gap-4 sm:gap-8 min-w-0">
+                <span className="font-mono text-[10px] uppercase text-cream/40 w-8 shrink-0">
+                  {p.n}
+                </span>
+                <div className="min-w-0">
+                  <h3 className="font-grotesk uppercase text-cream text-2xl sm:text-4xl lg:text-5xl leading-none truncate group-hover:text-neon transition-colors">
+                    {p.title}
+                  </h3>
+                  <p className="font-mono text-[11px] uppercase tracking-widest text-cream/50 mt-2">
+                    {p.tag}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4 sm:gap-6 shrink-0">
+                <span className="hidden sm:inline font-mono text-[11px] uppercase text-cream/40">
+                  {p.year}
+                </span>
+                <ArrowUpRight
+                  size={28}
+                  className="text-cream/40 group-hover:text-neon group-hover:rotate-45 transition-all duration-500"
                 />
               </div>
-              <div className="liquid-glass rounded-[20px] mt-4 px-5 py-4 flex items-center justify-between">
-                <div>
-                  <div className="font-mono text-[11px] uppercase text-cream/70">Rarity score</div>
-                  <div className="font-grotesk text-cream text-base mt-1">
-                    {it.title} · {it.score}/10
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  aria-label={`Open ${it.title}`}
-                  className="w-12 h-12 rounded-full bg-gradient-to-br from-[#b724ff] to-[#7c3aed] shadow-lg shadow-purple-500/40 flex items-center justify-center text-cream hover:scale-110 transition"
-                >
-                  <ArrowRight size={20} />
-                </button>
-              </div>
-            </article>
+            </motion.a>
           ))}
         </div>
       </div>
@@ -243,98 +498,126 @@ function Work() {
   );
 }
 
-function Cinema() {
-  const y = useScrollY();
+// ---------- Contact ----------
+function Contact({ y }: { y: MotionValue<number> }) {
+  const videoY = useTransform(y, [3000, 5000], [80, -80]);
+
   return (
-    <section className="relative w-full overflow-hidden h-[70vh] sm:h-[90vh] mt-6 rounded-[32px]">
-      <div
-        className="absolute inset-0 will-change-transform"
-        style={{ transform: `translate3d(0, ${(y - 2200) * 0.2}px, 0)` }}
+    <section id="contact" className="relative w-full overflow-hidden py-32 sm:py-44">
+      <motion.div
+        style={{ y: videoY }}
+        className="absolute inset-0 -top-32 -bottom-32 will-change-transform"
       >
-        <LoopVideo src={VIDEOS.cinema} fade className="w-full h-full" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#010828] via-transparent to-[#010828]" />
-      </div>
-      <div className="relative z-10 max-w-[1100px] mx-auto h-full flex flex-col items-center justify-center text-center px-6">
-        <p className="font-condiment text-neon text-2xl sm:text-4xl mix-exclusion -rotate-2 mb-6">
-          a quiet philosophy
-        </p>
-        <h3 className="font-serif-display text-cream text-4xl sm:text-6xl md:text-7xl leading-[0.95] tracking-[-0.02em]">
-          Beyond <em className="text-cream/60">silence,</em> we build
-          <br />
-          <em className="text-cream/60">the eternal.</em>
-        </h3>
-        <p className="font-mono text-[13px] sm:text-sm uppercase text-cream/70 mt-8 max-w-xl leading-relaxed">
-          Building platforms for brilliant minds, fearless makers, and thoughtful souls.
-          Through the noise, we craft digital havens for deep work and pure flows.
-        </p>
-      </div>
-    </section>
-  );
-}
+        <LoopVideo src={VIDEOS.cta} className="w-full h-full opacity-40" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#010828] via-[#010828]/50 to-[#010828]" />
+      </motion.div>
 
-function CTA() {
-  return (
-    <section id="contact" className="relative w-full overflow-hidden mt-6 rounded-[32px] bg-space">
-      <div className="relative">
-        <LoopVideo src={VIDEOS.cta} className="w-full h-auto block" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#010828] via-[#010828]/40 to-transparent" />
-      </div>
+      <div className="relative max-w-4xl mx-auto px-5 sm:px-8 text-center">
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="font-condiment text-neon text-3xl sm:text-5xl mix-exclusion -rotate-2"
+        >
+          let's talk
+        </motion.p>
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] as const }}
+          className="font-grotesk uppercase text-cream text-[40px] sm:text-[72px] lg:text-[96px] leading-[0.95] mt-4"
+        >
+          Got an idea?<br />Ping me on Telegram.
+        </motion.h2>
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="font-mono text-[12px] sm:text-sm uppercase text-cream/60 mt-8 max-w-xl mx-auto leading-relaxed"
+        >
+          Currently taking on a few new freelance & contract projects for Q2.
+          Async-friendly, time-zone friendly, drama-free.
+        </motion.p>
 
-      <div className="absolute inset-0 z-10 max-w-[1831px] mx-auto px-6 sm:px-10 lg:pr-[18%] lg:pl-[12%] flex flex-col justify-center items-end text-right">
-        <div className="relative">
-          <span className="absolute -top-6 sm:-top-10 -left-6 sm:-left-16 font-condiment text-neon text-2xl sm:text-5xl mix-exclusion -rotate-3">
-            Go beyond
-          </span>
-          <h2 className="font-grotesk uppercase text-cream text-[28px] sm:text-[44px] md:text-[56px] leading-[1]">
-            <span className="block mb-3 sm:mb-6">Let's build</span>
-            something<br />
-            quiet, fast,<br />
-            <span className="text-neon">and eternal.</span>
-          </h2>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="mt-12 flex flex-wrap items-center justify-center gap-3"
+        >
           <a
             href={TELEGRAM}
             target="_blank"
             rel="noreferrer"
-            className="mt-8 inline-flex items-center gap-2 bg-neon text-[#010828] font-grotesk uppercase text-xs sm:text-sm tracking-widest rounded-full px-6 sm:px-8 py-3 sm:py-4 hover:scale-[1.03] transition"
+            className="inline-flex items-center gap-2 bg-neon text-[#010828] font-grotesk uppercase text-xs sm:text-sm tracking-widest rounded-full px-7 py-4 hover:scale-[1.03] transition"
           >
-            Message on Telegram <ArrowRight size={16} />
+            <Send size={16} /> Message on Telegram
           </a>
-        </div>
-      </div>
+          <a
+            href="mailto:hello@rahul.dev"
+            className="liquid-glass inline-flex items-center gap-2 rounded-full px-7 py-4 font-grotesk uppercase text-xs sm:text-sm tracking-widest text-cream hover:text-neon transition"
+          >
+            <Mail size={16} /> Email
+          </a>
+        </motion.div>
 
-      <div className="absolute left-[6%] bottom-[10%] sm:bottom-[14%] z-10">
-        <SocialStack />
+        <div className="mt-16 flex items-center justify-center gap-3">
+          {[
+            { href: TELEGRAM, icon: Send, label: "Telegram" },
+            { href: "mailto:hello@rahul.dev", icon: Mail, label: "Email" },
+            { href: "https://github.com", icon: Github, label: "GitHub" },
+          ].map((s) => (
+            <a
+              key={s.label}
+              href={s.href}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={s.label}
+              className="liquid-glass w-12 h-12 rounded-full flex items-center justify-center text-cream hover:text-neon transition"
+            >
+              <s.icon size={16} />
+            </a>
+          ))}
+        </div>
       </div>
     </section>
   );
 }
 
+// ---------- Footer ----------
 function Footer() {
   return (
-    <footer className="max-w-[1831px] mx-auto px-5 sm:px-8 py-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-      <div className="font-grotesk uppercase text-cream tracking-wider">
-        Rahul<span className="text-neon">.</span>Studio · © {new Date().getFullYear()}
-      </div>
-      <div className="flex items-center gap-4 font-mono text-[11px] uppercase text-cream/60">
-        <a href={TELEGRAM} target="_blank" rel="noreferrer" className="hover:text-neon">Telegram</a>
-        <span>·</span>
-        <a href="mailto:hello@rahul.dev" className="hover:text-neon">Email</a>
-        <span>·</span>
-        <span>Built quietly</span>
+    <footer className="bg-space border-t border-white/5">
+      <div className="max-w-6xl mx-auto px-5 sm:px-8 py-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="font-grotesk uppercase text-cream/80 tracking-widest text-sm">
+          Rahul<span className="text-neon">.</span> · Full-stack dev
+        </div>
+        <div className="font-mono text-[10px] uppercase tracking-widest text-cream/40">
+          © {new Date().getFullYear()} · Built quietly, shipped fast.
+        </div>
       </div>
     </footer>
   );
 }
 
+// ---------- Page ----------
 function Index() {
+  const smoothY = useSmoothScroll();
+  const containerRef = useRef<HTMLElement>(null);
+
   return (
-    <main className="relative bg-space min-h-screen text-cream overflow-x-hidden">
+    <main ref={containerRef} className="relative bg-space text-cream overflow-x-hidden">
       <div className="texture-overlay" aria-hidden />
-      <Hero />
-      <About />
+      <Navbar />
+      <Hero y={smoothY} />
+      <About y={smoothY} />
+      <Stack />
       <Work />
-      <Cinema />
-      <CTA />
+      <Contact y={smoothY} />
       <Footer />
     </main>
   );

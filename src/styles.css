@@ -141,8 +141,6 @@
   .mix-exclusion {
     mix-blend-mode: exclusion;
   }
-}
-
   .glass-card {
     background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
     backdrop-filter: blur(14px);
@@ -170,10 +168,11 @@
     width: max-content;
     animation: marquee 32s linear infinite;
   }
-  @keyframes marquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 
 @keyframes fade-rise {

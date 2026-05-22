@@ -345,7 +345,7 @@ function About({ y }: { y: MotionValue<number> }) {
             </motion.div>
           ))}
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

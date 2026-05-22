@@ -144,7 +144,7 @@ function Hero({ y }: { y: MotionValue<number> }) {
       </motion.div>
 
       <motion.div
-        style={{ y: contentY, opacity: contentOpacity }}
+        style={{ y: contentY, opacity: contentOpacity, scale: contentScale }}
         className="relative z-10 max-w-6xl mx-auto px-5 sm:px-8 pt-36 sm:pt-44 pb-24 text-center flex flex-col items-center"
       >
         <motion.div

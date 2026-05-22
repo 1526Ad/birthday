@@ -282,7 +282,7 @@ function About({ y }: { y: MotionValue<number> }) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] as const }}
-          className="font-grotesk uppercase text-cream text-[36px] sm:text-[56px] lg:text-[72px] leading-[1] max-w-4xl"
+          className="font-grotesk uppercase text-cream text-[32px] sm:text-[56px] lg:text-[72px] leading-[1] max-w-4xl"
         >
           A full-stack dev who treats the{" "}
           <span className="font-condiment normal-case text-neon mix-exclusion">

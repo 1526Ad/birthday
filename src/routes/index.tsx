@@ -187,10 +187,10 @@ function Hero({ y }: { y: MotionValue<number> }) {
           className="mt-10 flex flex-wrap items-center justify-center gap-3"
         >
           <a
-            href="#work"
+            href="#about"
             className="inline-flex items-center gap-2 bg-neon text-[#010828] font-grotesk uppercase text-xs sm:text-sm tracking-widest rounded-full px-6 sm:px-7 py-3.5 hover:scale-[1.03] transition"
           >
-            See the work <ArrowUpRight size={16} />
+            About me <ArrowUpRight size={16} />
           </a>
           <a
             href={TELEGRAM}

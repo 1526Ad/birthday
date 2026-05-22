@@ -553,7 +553,7 @@ function Index() {
       <Hero y={smoothY} />
       <About y={smoothY} />
       <Stack />
-      <Work />
+      {/* Work section removed */}
       <Contact y={smoothY} />
       <Footer />
     </main>

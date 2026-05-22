@@ -251,19 +251,22 @@ function Hero({ y }: { y: MotionValue<number> }) {
 
 // ---------- About ----------
 function About({ y }: { y: MotionValue<number> }) {
-  const videoY = useTransform(y, [600, 1800], [120, -120]);
+  const videoY = useTransform(y, [400, 2000], [200, -200]);
+  const videoScale = useTransform(y, [400, 2000], [1.2, 1]);
+  const videoRotate = useTransform(y, [400, 2000], [2, -2]);
+  const headingY = useTransform(y, [400, 1600], [80, -40]);
 
   return (
     <section id="about" className="relative w-full overflow-hidden py-32 sm:py-44">
       <motion.div
-        style={{ y: videoY }}
+        style={{ y: videoY, scale: videoScale, rotate: videoRotate }}
         className="absolute inset-0 -top-32 -bottom-32 will-change-transform"
       >
         <LoopVideo src={VIDEOS.about} className="w-full h-full opacity-50" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#010828] via-[#010828]/60 to-[#010828]" />
       </motion.div>
 
-      <div className="relative max-w-6xl mx-auto px-5 sm:px-8">
+      <motion.div style={{ y: headingY }} className="relative max-w-6xl mx-auto px-5 sm:px-8">
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

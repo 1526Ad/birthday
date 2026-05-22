@@ -114,10 +114,14 @@ function Navbar() {
 
 // ---------- Hero ----------
 function Hero({ y }: { y: MotionValue<number> }) {
-  const videoY = useTransform(y, (v) => v * 0.35);
-  const videoScale = useTransform(y, [0, 800], [1, 1.15]);
-  const contentY = useTransform(y, (v) => v * -0.15);
+  const videoY = useTransform(y, (v) => v * 0.45);
+  const videoScale = useTransform(y, [0, 900], [1.05, 1.35]);
+  const videoBlur = useTransform(y, [0, 700], [0, 8]);
+  const videoFilter = useTransform(videoBlur, (b) => `blur(${b}px)`);
+  const videoRotate = useTransform(y, [0, 900], [0, -3]);
+  const contentY = useTransform(y, (v) => v * -0.22);
   const contentOpacity = useTransform(y, [0, 500], [1, 0]);
+  const contentScale = useTransform(y, [0, 500], [1, 0.92]);
 
   const stagger = {
     hidden: { opacity: 0, y: 24 },
@@ -132,7 +136,7 @@ function Hero({ y }: { y: MotionValue<number> }) {
     <section id="home" className="relative min-h-screen w-full overflow-hidden">
       {/* Parallax video bg */}
       <motion.div
-        style={{ y: videoY, scale: videoScale }}
+        style={{ y: videoY, scale: videoScale, rotate: videoRotate, filter: videoFilter }}
         className="absolute inset-0 will-change-transform"
       >
         <LoopVideo src={VIDEOS.hero} className="w-full h-full" />

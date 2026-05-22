@@ -351,7 +351,11 @@ function About({ y }: { y: MotionValue<number> }) {
 }
 
 // ---------- Stack / Services ----------
-function Stack() {
+function Stack({ y }: { y: MotionValue<number> }) {
+  const headingY = useTransform(y, [1600, 3200], [60, -60]);
+  const blobY = useTransform(y, [1600, 3400], [-80, 80]);
+  const blobRotate = useTransform(y, [1600, 3400], [-15, 15]);
+
   const items = [
     {
       icon: Layers,
@@ -379,53 +383,71 @@ function Stack() {
     },
   ];
 
-  return (
-    <section id="stack" className="relative bg-space py-28 sm:py-40">
-      <div className="max-w-6xl mx-auto px-5 sm:px-8">
-        <div className="flex items-end justify-between gap-6 mb-16">
-          <div>
-            <p className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.3em] text-neon mb-5">
-              02 — Stack
-            </p>
-            <h2 className="font-grotesk uppercase text-cream text-[36px] sm:text-[56px] lg:text-[72px] leading-[1] max-w-3xl">
-              End-to-end,{" "}
-              <span className="font-condiment normal-case text-neon mix-exclusion">
-                honestly
-              </span>
-              .
-            </h2>
-          </div>
-        </div>
+  const marquee = ["Quiet code", "Fast ships", "End-to-end", "No drama", "Async friendly", "Time-zone friendly"];
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+  const onMove = (e: React.MouseEvent<HTMLElement>) => {
+    const el = e.currentTarget;
+    const r = el.getBoundingClientRect();
+    el.style.setProperty("--mx", `${e.clientX - r.left}px`);
+    el.style.setProperty("--my", `${e.clientY - r.top}px`);
+  };
+
+  return (
+    <section id="stack" className="relative bg-space py-24 sm:py-40 overflow-hidden">
+      {/* Parallax blob */}
+      <motion.div
+        style={{ y: blobY, rotate: blobRotate }}
+        className="pointer-events-none absolute -right-32 top-20 w-[520px] h-[520px] rounded-full bg-neon/10 blur-[120px]"
+        aria-hidden
+      />
+
+      <div className="relative max-w-6xl mx-auto px-5 sm:px-8">
+        <motion.div style={{ y: headingY }} className="mb-14 sm:mb-20">
+          <p className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.3em] text-neon mb-5">
+            02 — Stack
+          </p>
+          <h2 className="font-grotesk uppercase text-cream text-[32px] sm:text-[56px] lg:text-[80px] leading-[0.95] max-w-3xl">
+            End-to-end,{" "}
+            <span className="font-condiment normal-case text-neon mix-exclusion">
+              honestly
+            </span>
+            .
+          </h2>
+          <p className="mt-6 font-mono text-[12px] sm:text-sm uppercase tracking-widest text-cream/50 max-w-xl">
+            One brain across design, code, data and deploys — fewer hand-offs, more momentum.
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-5">
           {items.map((it, i) => (
             <motion.article
               key={it.title}
-              initial={{ opacity: 0, y: 40 }}
+              onMouseMove={onMove}
+              initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.7, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] as const }}
-              className="liquid-glass rounded-3xl p-7 sm:p-9 hover:bg-white/[0.04] transition group"
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{ duration: 0.8, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] as const }}
+              className="glass-card rounded-3xl p-6 sm:p-9 group"
             >
               <div className="flex items-center justify-between">
-                <div className="w-11 h-11 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-neon">
+                <div className="w-11 h-11 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-neon group-hover:bg-neon/10 group-hover:border-neon/30 transition-colors">
                   <it.icon size={20} />
                 </div>
                 <span className="font-mono text-[10px] uppercase tracking-widest text-cream/40">
                   0{i + 1}
                 </span>
               </div>
-              <h3 className="font-grotesk uppercase text-cream text-2xl sm:text-3xl mt-6">
+              <h3 className="font-grotesk uppercase text-cream text-xl sm:text-3xl mt-5 sm:mt-7">
                 {it.title}
               </h3>
-              <p className="font-mono text-[13px] leading-relaxed text-cream/60 mt-3">
+              <p className="font-mono text-[12px] sm:text-[13px] leading-relaxed text-cream/60 mt-3">
                 {it.desc}
               </p>
-              <div className="flex flex-wrap gap-2 mt-6">
+              <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-5 sm:mt-7">
                 {it.tags.map((t) => (
                   <span
                     key={t}
-                    className="font-mono text-[10px] uppercase tracking-widest text-cream/60 border border-white/10 rounded-full px-3 py-1"
+                    className="font-mono text-[9px] sm:text-[10px] uppercase tracking-widest text-cream/70 border border-white/10 rounded-full px-2.5 sm:px-3 py-1 bg-white/[0.02]"
                   >
                     {t}
                   </span>
@@ -433,6 +455,20 @@ function Stack() {
               </div>
             </motion.article>
           ))}
+        </div>
+
+        {/* Marquee strip */}
+        <div className="mt-16 sm:mt-24 relative overflow-hidden border-y border-white/10 py-5">
+          <div className="marquee font-grotesk uppercase text-cream/70 text-2xl sm:text-4xl tracking-wide">
+            {[...marquee, ...marquee].map((m, i) => (
+              <span key={i} className="flex items-center gap-16">
+                {m}
+                <span className="w-2 h-2 rounded-full bg-neon" />
+              </span>
+            ))}
+          </div>
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#010828] to-transparent" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-[#010828] to-transparent" />
         </div>
       </div>
     </section>

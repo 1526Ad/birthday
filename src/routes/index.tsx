@@ -597,7 +597,7 @@ function Index() {
       <Navbar />
       <Hero y={smoothY} />
       <About y={smoothY} />
-      <Stack />
+      <Stack y={smoothY} />
       {/* Work section removed */}
       <Contact y={smoothY} />
       <Footer />

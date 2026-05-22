@@ -10,10 +10,11 @@ export const Route = createFileRoute("/")({
 
 const TELEGRAM = "https://t.me/Darkbhaifan";
 
+const HERO_VIDEO = "https://files.catbox.moe/tcb686.mp4";
 const VIDEOS = {
-  hero: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260331_045634_e1c98c76-1265-4f5c-882a-4276f2080894.mp4",
-  about: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260331_151551_992053d1-3d3e-4b8c-abac-45f22158f411.mp4",
-  cta: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260331_055729_72d66327-b59e-4ae9-bb70-de6ccb5ecdb0.mp4",
+  hero: HERO_VIDEO,
+  about: HERO_VIDEO,
+  cta: HERO_VIDEO,
 };
 
 // ---------- Smooth parallax helpers ----------
@@ -52,7 +53,6 @@ function Navbar() {
   }, []);
 
   const links = [
-    { label: "Work", href: "#work" },
     { label: "About", href: "#about" },
     { label: "Stack", href: "#stack" },
     { label: "Contact", href: "#contact" },
@@ -114,10 +114,14 @@ function Navbar() {
 
 // ---------- Hero ----------
 function Hero({ y }: { y: MotionValue<number> }) {
-  const videoY = useTransform(y, (v) => v * 0.35);
-  const videoScale = useTransform(y, [0, 800], [1, 1.15]);
-  const contentY = useTransform(y, (v) => v * -0.15);
+  const videoY = useTransform(y, (v) => v * 0.45);
+  const videoScale = useTransform(y, [0, 900], [1.05, 1.35]);
+  const videoBlur = useTransform(y, [0, 700], [0, 8]);
+  const videoFilter = useTransform(videoBlur, (b) => `blur(${b}px)`);
+  const videoRotate = useTransform(y, [0, 900], [0, -3]);
+  const contentY = useTransform(y, (v) => v * -0.22);
   const contentOpacity = useTransform(y, [0, 500], [1, 0]);
+  const contentScale = useTransform(y, [0, 500], [1, 0.92]);
 
   const stagger = {
     hidden: { opacity: 0, y: 24 },
@@ -132,7 +136,7 @@ function Hero({ y }: { y: MotionValue<number> }) {
     <section id="home" className="relative min-h-screen w-full overflow-hidden">
       {/* Parallax video bg */}
       <motion.div
-        style={{ y: videoY, scale: videoScale }}
+        style={{ y: videoY, scale: videoScale, rotate: videoRotate, filter: videoFilter }}
         className="absolute inset-0 will-change-transform"
       >
         <LoopVideo src={VIDEOS.hero} className="w-full h-full" />
@@ -140,7 +144,7 @@ function Hero({ y }: { y: MotionValue<number> }) {
       </motion.div>
 
       <motion.div
-        style={{ y: contentY, opacity: contentOpacity }}
+        style={{ y: contentY, opacity: contentOpacity, scale: contentScale }}
         className="relative z-10 max-w-6xl mx-auto px-5 sm:px-8 pt-36 sm:pt-44 pb-24 text-center flex flex-col items-center"
       >
         <motion.div
@@ -187,10 +191,10 @@ function Hero({ y }: { y: MotionValue<number> }) {
           className="mt-10 flex flex-wrap items-center justify-center gap-3"
         >
           <a
-            href="#work"
+            href="#about"
             className="inline-flex items-center gap-2 bg-neon text-[#010828] font-grotesk uppercase text-xs sm:text-sm tracking-widest rounded-full px-6 sm:px-7 py-3.5 hover:scale-[1.03] transition"
           >
-            See the work <ArrowUpRight size={16} />
+            About me <ArrowUpRight size={16} />
           </a>
           <a
             href={TELEGRAM}
@@ -247,19 +251,22 @@ function Hero({ y }: { y: MotionValue<number> }) {
 
 // ---------- About ----------
 function About({ y }: { y: MotionValue<number> }) {
-  const videoY = useTransform(y, [600, 1800], [120, -120]);
+  const videoY = useTransform(y, [400, 2000], [200, -200]);
+  const videoScale = useTransform(y, [400, 2000], [1.2, 1]);
+  const videoRotate = useTransform(y, [400, 2000], [2, -2]);
+  const headingY = useTransform(y, [400, 1600], [80, -40]);
 
   return (
     <section id="about" className="relative w-full overflow-hidden py-32 sm:py-44">
       <motion.div
-        style={{ y: videoY }}
+        style={{ y: videoY, scale: videoScale, rotate: videoRotate }}
         className="absolute inset-0 -top-32 -bottom-32 will-change-transform"
       >
         <LoopVideo src={VIDEOS.about} className="w-full h-full opacity-50" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#010828] via-[#010828]/60 to-[#010828]" />
       </motion.div>
 
-      <div className="relative max-w-6xl mx-auto px-5 sm:px-8">
+      <motion.div style={{ y: headingY }} className="relative max-w-6xl mx-auto px-5 sm:px-8">
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -338,7 +345,7 @@ function About({ y }: { y: MotionValue<number> }) {
             </motion.div>
           ))}
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }
@@ -432,80 +439,19 @@ function Stack() {
   );
 }
 
-// ---------- Work ----------
-function Work() {
-  const projects = [
-    { n: "01", title: "Aethera UI", tag: "SaaS dashboard", year: "2026" },
-    { n: "02", title: "Orbis Brand", tag: "Product site + CMS", year: "2025" },
-    { n: "03", title: "Signal OS", tag: "AI agent platform", year: "2025" },
-    { n: "04", title: "Lumen Pay", tag: "Fintech onboarding", year: "2024" },
-  ];
+// Work section removed per request.
 
-  return (
-    <section id="work" className="relative bg-space py-28 sm:py-40">
-      <div className="max-w-6xl mx-auto px-5 sm:px-8">
-        <p className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.3em] text-neon mb-5">
-          03 — Selected work
-        </p>
-        <h2 className="font-grotesk uppercase text-cream text-[36px] sm:text-[56px] lg:text-[72px] leading-[1] max-w-3xl mb-16">
-          Recent things i{" "}
-          <span className="font-condiment normal-case text-neon mix-exclusion">
-            shipped
-          </span>
-          .
-        </h2>
-
-        <div className="divide-y divide-white/10 border-y border-white/10">
-          {projects.map((p, i) => (
-            <motion.a
-              key={p.n}
-              href={TELEGRAM}
-              target="_blank"
-              rel="noreferrer"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.4 }}
-              transition={{ duration: 0.6, delay: i * 0.06 }}
-              className="group flex items-center justify-between py-6 sm:py-8 gap-4 hover:px-2 transition-all duration-500"
-            >
-              <div className="flex items-center gap-4 sm:gap-8 min-w-0">
-                <span className="font-mono text-[10px] uppercase text-cream/40 w-8 shrink-0">
-                  {p.n}
-                </span>
-                <div className="min-w-0">
-                  <h3 className="font-grotesk uppercase text-cream text-2xl sm:text-4xl lg:text-5xl leading-none truncate group-hover:text-neon transition-colors">
-                    {p.title}
-                  </h3>
-                  <p className="font-mono text-[11px] uppercase tracking-widest text-cream/50 mt-2">
-                    {p.tag}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4 sm:gap-6 shrink-0">
-                <span className="hidden sm:inline font-mono text-[11px] uppercase text-cream/40">
-                  {p.year}
-                </span>
-                <ArrowUpRight
-                  size={28}
-                  className="text-cream/40 group-hover:text-neon group-hover:rotate-45 transition-all duration-500"
-                />
-              </div>
-            </motion.a>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
 
 // ---------- Contact ----------
 function Contact({ y }: { y: MotionValue<number> }) {
-  const videoY = useTransform(y, [3000, 5000], [80, -80]);
+  const videoY = useTransform(y, [2200, 4500], [180, -180]);
+  const videoScale = useTransform(y, [2200, 4500], [1.25, 1]);
+  const videoRotate = useTransform(y, [2200, 4500], [-2, 2]);
 
   return (
     <section id="contact" className="relative w-full overflow-hidden py-32 sm:py-44">
       <motion.div
-        style={{ y: videoY }}
+        style={{ y: videoY, scale: videoScale, rotate: videoRotate }}
         className="absolute inset-0 -top-32 -bottom-32 will-change-transform"
       >
         <LoopVideo src={VIDEOS.cta} className="w-full h-full opacity-40" />
@@ -616,7 +562,7 @@ function Index() {
       <Hero y={smoothY} />
       <About y={smoothY} />
       <Stack />
-      <Work />
+      {/* Work section removed */}
       <Contact y={smoothY} />
       <Footer />
     </main>

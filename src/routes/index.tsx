@@ -444,12 +444,14 @@ function Stack() {
 
 // ---------- Contact ----------
 function Contact({ y }: { y: MotionValue<number> }) {
-  const videoY = useTransform(y, [3000, 5000], [80, -80]);
+  const videoY = useTransform(y, [2200, 4500], [180, -180]);
+  const videoScale = useTransform(y, [2200, 4500], [1.25, 1]);
+  const videoRotate = useTransform(y, [2200, 4500], [-2, 2]);
 
   return (
     <section id="contact" className="relative w-full overflow-hidden py-32 sm:py-44">
       <motion.div
-        style={{ y: videoY }}
+        style={{ y: videoY, scale: videoScale, rotate: videoRotate }}
         className="absolute inset-0 -top-32 -bottom-32 will-change-transform"
       >
         <LoopVideo src={VIDEOS.cta} className="w-full h-full opacity-40" />

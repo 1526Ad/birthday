@@ -432,71 +432,8 @@ function Stack() {
   );
 }
 
-// ---------- Work ----------
-function Work() {
-  const projects = [
-    { n: "01", title: "Aethera UI", tag: "SaaS dashboard", year: "2026" },
-    { n: "02", title: "Orbis Brand", tag: "Product site + CMS", year: "2025" },
-    { n: "03", title: "Signal OS", tag: "AI agent platform", year: "2025" },
-    { n: "04", title: "Lumen Pay", tag: "Fintech onboarding", year: "2024" },
-  ];
+// Work section removed per request.
 
-  return (
-    <section id="work" className="relative bg-space py-28 sm:py-40">
-      <div className="max-w-6xl mx-auto px-5 sm:px-8">
-        <p className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.3em] text-neon mb-5">
-          03 — Selected work
-        </p>
-        <h2 className="font-grotesk uppercase text-cream text-[36px] sm:text-[56px] lg:text-[72px] leading-[1] max-w-3xl mb-16">
-          Recent things i{" "}
-          <span className="font-condiment normal-case text-neon mix-exclusion">
-            shipped
-          </span>
-          .
-        </h2>
-
-        <div className="divide-y divide-white/10 border-y border-white/10">
-          {projects.map((p, i) => (
-            <motion.a
-              key={p.n}
-              href={TELEGRAM}
-              target="_blank"
-              rel="noreferrer"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.4 }}
-              transition={{ duration: 0.6, delay: i * 0.06 }}
-              className="group flex items-center justify-between py-6 sm:py-8 gap-4 hover:px-2 transition-all duration-500"
-            >
-              <div className="flex items-center gap-4 sm:gap-8 min-w-0">
-                <span className="font-mono text-[10px] uppercase text-cream/40 w-8 shrink-0">
-                  {p.n}
-                </span>
-                <div className="min-w-0">
-                  <h3 className="font-grotesk uppercase text-cream text-2xl sm:text-4xl lg:text-5xl leading-none truncate group-hover:text-neon transition-colors">
-                    {p.title}
-                  </h3>
-                  <p className="font-mono text-[11px] uppercase tracking-widest text-cream/50 mt-2">
-                    {p.tag}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4 sm:gap-6 shrink-0">
-                <span className="hidden sm:inline font-mono text-[11px] uppercase text-cream/40">
-                  {p.year}
-                </span>
-                <ArrowUpRight
-                  size={28}
-                  className="text-cream/40 group-hover:text-neon group-hover:rotate-45 transition-all duration-500"
-                />
-              </div>
-            </motion.a>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
 
 // ---------- Contact ----------
 function Contact({ y }: { y: MotionValue<number> }) {

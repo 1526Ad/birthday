@@ -53,7 +53,6 @@ function Navbar() {
   }, []);
 
   const links = [
-    { label: "Work", href: "#work" },
     { label: "About", href: "#about" },
     { label: "Stack", href: "#stack" },
     { label: "Contact", href: "#contact" },

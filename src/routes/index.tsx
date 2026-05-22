@@ -163,7 +163,7 @@ function Hero({ y }: { y: MotionValue<number> }) {
           custom={1}
           initial="hidden"
           animate="show"
-          className="mt-8 font-grotesk uppercase text-cream text-[44px] sm:text-[72px] md:text-[96px] lg:text-[112px] leading-[0.92] tracking-[-0.02em] max-w-5xl"
+          className="mt-8 font-grotesk uppercase text-cream text-[38px] sm:text-[72px] md:text-[96px] lg:text-[112px] leading-[0.92] tracking-[-0.02em] max-w-5xl"
         >
           Full-stack dev<br />
           <span className="font-condiment normal-case text-neon mix-exclusion -tracking-normal">

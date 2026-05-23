@@ -17,6 +17,10 @@ const VIDEOS = {
   cta: HERO_VIDEO,
 };
 
+// Song that plays when user scrolls into the Contact section.
+// Replace with any direct .mp3 / .m4a / .ogg URL.
+const CONTACT_SONG = "https://files.catbox.moe/0d6vhe.mp3";
+
 // ---------- Mobile detection ----------
 function useIsMobile() {
   const [m, setM] = useState(false);

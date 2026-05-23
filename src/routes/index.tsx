@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, useSpring, type MotionValue } from "framer-motion";
-import { Send, Mail, Github, ArrowUpRight, Code2, Layers, Database, Sparkles, Play } from "lucide-react";
+import { Send, Mail, Github, ArrowUpRight, Code2, Layers, Database, Sparkles, Play, Zap, Cpu, Rocket } from "lucide-react";
 import { LoopVideo } from "@/components/LoopVideo";
 
 export const Route = createFileRoute("/")({
@@ -17,29 +17,42 @@ const VIDEOS = {
   cta: HERO_VIDEO,
 };
 
+// ---------- Mobile detection ----------
+function useIsMobile() {
+  const [m, setM] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    const on = () => setM(mq.matches);
+    on();
+    mq.addEventListener("change", on);
+    return () => mq.removeEventListener("change", on);
+  }, []);
+  return m;
+}
+
 // ---------- Smooth parallax helpers ----------
 function useSmoothScroll() {
   const { scrollY } = useScroll();
-  return useSpring(scrollY, { stiffness: 90, damping: 24, mass: 0.4 });
+  return useSpring(scrollY, { stiffness: 120, damping: 28, mass: 0.35 });
 }
 
-function Parallax({
-  y,
-  speed = 0.3,
-  children,
-  className = "",
-}: {
-  y: MotionValue<number>;
-  speed?: number;
-  children: React.ReactNode;
-  className?: string;
-}) {
-  const translate = useTransform(y, (v) => v * speed);
-  return (
-    <motion.div style={{ y: translate }} className={className}>
-      {children}
-    </motion.div>
-  );
+// rAF-throttled pointer handler for spotlight hover
+function useRafPointer() {
+  const raf = useRef(0);
+  const pending = useRef<{ el: HTMLElement; x: number; y: number } | null>(null);
+  return (e: React.MouseEvent<HTMLElement>) => {
+    const el = e.currentTarget;
+    const r = el.getBoundingClientRect();
+    pending.current = { el, x: e.clientX - r.left, y: e.clientY - r.top };
+    if (raf.current) return;
+    raf.current = requestAnimationFrame(() => {
+      raf.current = 0;
+      const p = pending.current;
+      if (!p) return;
+      p.el.style.setProperty("--mx", `${p.x}px`);
+      p.el.style.setProperty("--my", `${p.y}px`);
+    });
+  };
 }
 
 // ---------- Navbar ----------
@@ -114,14 +127,13 @@ function Navbar() {
 
 // ---------- Hero ----------
 function Hero({ y }: { y: MotionValue<number> }) {
-  const videoY = useTransform(y, (v) => v * 0.45);
-  const videoScale = useTransform(y, [0, 900], [1.05, 1.35]);
-  const videoBlur = useTransform(y, [0, 700], [0, 8]);
-  const videoFilter = useTransform(videoBlur, (b) => `blur(${b}px)`);
-  const videoRotate = useTransform(y, [0, 900], [0, -3]);
-  const contentY = useTransform(y, (v) => v * -0.22);
+  const isMobile = useIsMobile();
+  const videoY = useTransform(y, (v) => v * (isMobile ? 0.25 : 0.45));
+  const videoScale = useTransform(y, [0, 900], isMobile ? [1.02, 1.12] : [1.05, 1.25]);
+  const videoRotate = useTransform(y, [0, 900], isMobile ? [0, 0] : [0, -2]);
+  const contentY = useTransform(y, (v) => v * (isMobile ? -0.1 : -0.22));
   const contentOpacity = useTransform(y, [0, 500], [1, 0]);
-  const contentScale = useTransform(y, [0, 500], [1, 0.92]);
+  const contentScale = useTransform(y, [0, 500], [1, 0.94]);
 
   const stagger = {
     hidden: { opacity: 0, y: 24 },
@@ -134,9 +146,9 @@ function Hero({ y }: { y: MotionValue<number> }) {
 
   return (
     <section id="home" className="relative min-h-screen w-full overflow-hidden">
-      {/* Parallax video bg */}
+      {/* Parallax video bg — no filter:blur (kills perf on mobile) */}
       <motion.div
-        style={{ y: videoY, scale: videoScale, rotate: videoRotate, filter: videoFilter }}
+        style={{ y: videoY, scale: videoScale, rotate: videoRotate }}
         className="absolute inset-0 will-change-transform"
       >
         <LoopVideo src={VIDEOS.hero} className="w-full h-full" />
@@ -251,19 +263,30 @@ function Hero({ y }: { y: MotionValue<number> }) {
 
 // ---------- About ----------
 function About({ y }: { y: MotionValue<number> }) {
-  const videoY = useTransform(y, [400, 2000], [200, -200]);
-  const videoScale = useTransform(y, [400, 2000], [1.2, 1]);
-  const videoRotate = useTransform(y, [400, 2000], [2, -2]);
-  const headingY = useTransform(y, [400, 1600], [80, -40]);
+  const isMobile = useIsMobile();
+  const videoY = useTransform(y, [400, 2000], isMobile ? [80, -80] : [200, -200]);
+  const videoScale = useTransform(y, [400, 2000], isMobile ? [1.1, 1] : [1.2, 1]);
+  const videoRotate = useTransform(y, [400, 2000], isMobile ? [0, 0] : [2, -2]);
+  const headingY = useTransform(y, [400, 1600], isMobile ? [30, -15] : [80, -40]);
+  const onMove = useRafPointer();
+
+  const intro = "I'm Rahul — I design, ship and scale web products end-to-end. From pixel-perfect UI to APIs, databases & deploys.";
+  const words = intro.split(" ");
+
+  const pillars = [
+    { icon: Zap, k: "Design", v: "Pixel-perfect UI, motion, brand systems." },
+    { icon: Cpu, k: "Engineer", v: "TS everywhere, clean APIs, sane data." },
+    { icon: Rocket, k: "Ship", v: "CI/CD, edge, observability — calmly." },
+  ];
 
   return (
-    <section id="about" className="relative w-full overflow-hidden py-32 sm:py-44">
+    <section id="about" className="relative w-full overflow-hidden py-24 sm:py-44">
       <motion.div
         style={{ y: videoY, scale: videoScale, rotate: videoRotate }}
         className="absolute inset-0 -top-32 -bottom-32 will-change-transform"
       >
-        <LoopVideo src={VIDEOS.about} className="w-full h-full opacity-50" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#010828] via-[#010828]/60 to-[#010828]" />
+        <LoopVideo src={VIDEOS.about} className="w-full h-full opacity-40" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#010828] via-[#010828]/70 to-[#010828]" />
       </motion.div>
 
       <motion.div style={{ y: headingY }} className="relative max-w-6xl mx-auto px-5 sm:px-8">
@@ -277,51 +300,54 @@ function About({ y }: { y: MotionValue<number> }) {
           01 — About
         </motion.p>
 
+        {/* Animated word-by-word intro */}
         <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.4 }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] as const }}
-          className="font-grotesk uppercase text-cream text-[32px] sm:text-[56px] lg:text-[72px] leading-[1] max-w-4xl"
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ staggerChildren: 0.04 }}
+          className="font-grotesk uppercase text-cream text-[28px] sm:text-[52px] lg:text-[68px] leading-[1.05] max-w-5xl flex flex-wrap gap-x-[0.28em] gap-y-1"
         >
-          A full-stack dev who treats the{" "}
-          <span className="font-condiment normal-case text-neon mix-exclusion">
-            entire stack
-          </span>{" "}
-          as one craft.
+          {words.map((w, i) => {
+            const accent = ["Rahul", "design,", "ship", "scale", "end-to-end."].includes(w);
+            return (
+              <motion.span
+                key={i}
+                variants={{
+                  hidden: { opacity: 0, y: 24, filter: "blur(6px)" },
+                  show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } },
+                }}
+                className={accent ? "text-neon" : ""}
+              >
+                {w}
+              </motion.span>
+            );
+          })}
         </motion.h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 sm:gap-16 mt-16">
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="font-mono text-[13px] sm:text-[15px] leading-relaxed text-cream/80"
-          >
-            I'm Rahul — a self-taught full-stack engineer with 6+ years shipping web
-            products. I live in the seam between design and engineering: pushing pixels,
-            tuning queries, automating deploys, and obsessing over the small moments
-            that make software feel calm.
-          </motion.p>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="font-mono text-[13px] sm:text-[15px] leading-relaxed text-cream/60"
-          >
-            Today I build SaaS dashboards, AI-powered tools, and product surfaces for
-            founders & small teams. Quiet code, fast ships, no drama — pinged on
-            <a href={TELEGRAM} target="_blank" rel="noreferrer" className="text-neon hover:underline ml-1">
-              Telegram
-            </a>{" "}
-            when something interesting comes up.
-          </motion.p>
+        {/* Glass pillar cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-5 mt-12 sm:mt-20">
+          {pillars.map((p, i) => (
+            <motion.div
+              key={p.k}
+              onMouseMove={onMove}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.7, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] as const }}
+              className="glass-card rounded-3xl p-6 sm:p-8"
+            >
+              <div className="w-11 h-11 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-neon">
+                <p.icon size={18} />
+              </div>
+              <div className="font-grotesk uppercase text-cream text-xl sm:text-2xl mt-5">{p.k}</div>
+              <div className="font-mono text-[12px] sm:text-[13px] text-cream/60 mt-2 leading-relaxed">{p.v}</div>
+            </motion.div>
+          ))}
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-white/10 mt-20 rounded-2xl overflow-hidden">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-white/10 mt-12 sm:mt-20 rounded-2xl overflow-hidden">
           {[
             { k: "6+", v: "Years building" },
             { k: "40+", v: "Products shipped" },
@@ -334,9 +360,9 @@ function About({ y }: { y: MotionValue<number> }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.08 }}
-              className="bg-[#010828] p-6 sm:p-8"
+              className="bg-[#010828]/80 backdrop-blur-sm p-5 sm:p-8"
             >
-              <div className="font-grotesk text-cream text-[36px] sm:text-[52px] leading-none">
+              <div className="font-grotesk text-cream text-[32px] sm:text-[52px] leading-none">
                 {s.k}
               </div>
               <div className="font-mono text-[10px] sm:text-[11px] uppercase tracking-widest text-cream/50 mt-3">
@@ -352,9 +378,11 @@ function About({ y }: { y: MotionValue<number> }) {
 
 // ---------- Stack / Services ----------
 function Stack({ y }: { y: MotionValue<number> }) {
-  const headingY = useTransform(y, [1600, 3200], [60, -60]);
-  const blobY = useTransform(y, [1600, 3400], [-80, 80]);
+  const isMobile = useIsMobile();
+  const headingY = useTransform(y, [1600, 3200], isMobile ? [20, -20] : [60, -60]);
+  const blobY = useTransform(y, [1600, 3400], isMobile ? [-30, 30] : [-80, 80]);
   const blobRotate = useTransform(y, [1600, 3400], [-15, 15]);
+  const onMove = useRafPointer();
 
   const items = [
     {
@@ -385,12 +413,8 @@ function Stack({ y }: { y: MotionValue<number> }) {
 
   const marquee = ["Quiet code", "Fast ships", "End-to-end", "No drama", "Async friendly", "Time-zone friendly"];
 
-  const onMove = (e: React.MouseEvent<HTMLElement>) => {
-    const el = e.currentTarget;
-    const r = el.getBoundingClientRect();
-    el.style.setProperty("--mx", `${e.clientX - r.left}px`);
-    el.style.setProperty("--my", `${e.clientY - r.top}px`);
-  };
+
+
 
   return (
     <section id="stack" className="relative bg-space py-24 sm:py-40 overflow-hidden">
@@ -480,9 +504,10 @@ function Stack({ y }: { y: MotionValue<number> }) {
 
 // ---------- Contact ----------
 function Contact({ y }: { y: MotionValue<number> }) {
-  const videoY = useTransform(y, [2200, 4500], [180, -180]);
-  const videoScale = useTransform(y, [2200, 4500], [1.25, 1]);
-  const videoRotate = useTransform(y, [2200, 4500], [-2, 2]);
+  const isMobile = useIsMobile();
+  const videoY = useTransform(y, [2200, 4500], isMobile ? [70, -70] : [180, -180]);
+  const videoScale = useTransform(y, [2200, 4500], isMobile ? [1.1, 1] : [1.25, 1]);
+  const videoRotate = useTransform(y, [2200, 4500], isMobile ? [0, 0] : [-2, 2]);
 
   return (
     <section id="contact" className="relative w-full overflow-hidden py-32 sm:py-44">

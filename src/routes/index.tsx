@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, useSpring, type MotionValue } from "framer-motion";
-import { Send, Mail, Github, ArrowUpRight, Code2, Layers, Database, Sparkles, Play } from "lucide-react";
+import { Send, Mail, Github, ArrowUpRight, Code2, Layers, Database, Sparkles, Play, Zap, Cpu, Rocket } from "lucide-react";
 import { LoopVideo } from "@/components/LoopVideo";
 
 export const Route = createFileRoute("/")({
@@ -17,29 +17,42 @@ const VIDEOS = {
   cta: HERO_VIDEO,
 };
 
+// ---------- Mobile detection ----------
+function useIsMobile() {
+  const [m, setM] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    const on = () => setM(mq.matches);
+    on();
+    mq.addEventListener("change", on);
+    return () => mq.removeEventListener("change", on);
+  }, []);
+  return m;
+}
+
 // ---------- Smooth parallax helpers ----------
 function useSmoothScroll() {
   const { scrollY } = useScroll();
-  return useSpring(scrollY, { stiffness: 90, damping: 24, mass: 0.4 });
+  return useSpring(scrollY, { stiffness: 120, damping: 28, mass: 0.35 });
 }
 
-function Parallax({
-  y,
-  speed = 0.3,
-  children,
-  className = "",
-}: {
-  y: MotionValue<number>;
-  speed?: number;
-  children: React.ReactNode;
-  className?: string;
-}) {
-  const translate = useTransform(y, (v) => v * speed);
-  return (
-    <motion.div style={{ y: translate }} className={className}>
-      {children}
-    </motion.div>
-  );
+// rAF-throttled pointer handler for spotlight hover
+function useRafPointer() {
+  const raf = useRef(0);
+  const pending = useRef<{ el: HTMLElement; x: number; y: number } | null>(null);
+  return (e: React.MouseEvent<HTMLElement>) => {
+    const el = e.currentTarget;
+    const r = el.getBoundingClientRect();
+    pending.current = { el, x: e.clientX - r.left, y: e.clientY - r.top };
+    if (raf.current) return;
+    raf.current = requestAnimationFrame(() => {
+      raf.current = 0;
+      const p = pending.current;
+      if (!p) return;
+      p.el.style.setProperty("--mx", `${p.x}px`);
+      p.el.style.setProperty("--my", `${p.y}px`);
+    });
+  };
 }
 
 // ---------- Navbar ----------

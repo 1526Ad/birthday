@@ -17,6 +17,10 @@ const VIDEOS = {
   cta: HERO_VIDEO,
 };
 
+// Song that plays when user scrolls into the Contact section.
+// Replace with any direct .mp3 / .m4a / .ogg URL.
+const CONTACT_SONG = "https://files.catbox.moe/0d6vhe.mp3";
+
 // ---------- Mobile detection ----------
 function useIsMobile() {
   const [m, setM] = useState(false);
@@ -185,15 +189,30 @@ function Hero({ y }: { y: MotionValue<number> }) {
         </motion.h1>
 
         <motion.p
-          variants={stagger}
-          custom={2}
           initial="hidden"
           animate="show"
-          className="mt-7 font-mono text-[12px] sm:text-sm uppercase text-cream/65 max-w-xl leading-relaxed"
+          transition={{ staggerChildren: 0.025, delayChildren: 0.5 }}
+          className="mt-7 font-mono text-[11px] sm:text-sm uppercase text-cream/70 max-w-xl leading-relaxed flex flex-wrap justify-center gap-x-[0.35em] gap-y-1 px-2"
         >
-          I'm Rahul — I design, ship and scale web products end-to-end.
-          From pixel-perfect UI to APIs, databases & deploys.
+          {"I'm Rahul — I design, ship and scale web products end-to-end. From pixel-perfect UI to APIs, databases & deploys."
+            .split(" ")
+            .map((w, i) => {
+              const hot = ["Rahul", "design,", "ship", "scale", "end-to-end."].includes(w);
+              return (
+                <motion.span
+                  key={i}
+                  variants={{
+                    hidden: { opacity: 0, y: 12, filter: "blur(4px)" },
+                    show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+                  }}
+                  className={hot ? "text-neon" : ""}
+                >
+                  {w}
+                </motion.span>
+              );
+            })}
         </motion.p>
+
 
         <motion.div
           variants={stagger}
@@ -509,8 +528,42 @@ function Contact({ y }: { y: MotionValue<number> }) {
   const videoScale = useTransform(y, [2200, 4500], isMobile ? [1.1, 1] : [1.25, 1]);
   const videoRotate = useTransform(y, [2200, 4500], isMobile ? [0, 0] : [-2, 2]);
 
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const [needsTap, setNeedsTap] = useState(false);
+  const [playing, setPlaying] = useState(false);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    const node = sectionRef.current;
+    if (!audio || !node) return;
+    audio.volume = 0.55;
+
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          audio.play().then(() => setPlaying(true)).catch(() => setNeedsTap(true));
+        } else {
+          audio.pause();
+          setPlaying(false);
+        }
+      },
+      { threshold: 0.35 }
+    );
+    io.observe(node);
+    return () => io.disconnect();
+  }, []);
+
+  const tapToPlay = () => {
+    audioRef.current?.play().then(() => {
+      setPlaying(true);
+      setNeedsTap(false);
+    }).catch(() => {});
+  };
+
   return (
-    <section id="contact" className="relative w-full overflow-hidden py-32 sm:py-44">
+    <section ref={sectionRef} id="contact" className="relative w-full overflow-hidden py-32 sm:py-44">
+      <audio ref={audioRef} src={CONTACT_SONG} loop preload="auto" />
       <motion.div
         style={{ y: videoY, scale: videoScale, rotate: videoRotate }}
         className="absolute inset-0 -top-32 -bottom-32 will-change-transform"
@@ -518,6 +571,26 @@ function Contact({ y }: { y: MotionValue<number> }) {
         <LoopVideo src={VIDEOS.cta} className="w-full h-full opacity-40" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#010828] via-[#010828]/50 to-[#010828]" />
       </motion.div>
+
+      {needsTap && (
+        <button
+          onClick={tapToPlay}
+          className="fixed bottom-5 right-5 z-50 liquid-glass rounded-full px-4 py-3 flex items-center gap-2 text-cream text-xs font-mono uppercase tracking-widest hover:text-neon transition"
+        >
+          <Play size={14} /> Play song
+        </button>
+      )}
+      {playing && (
+        <div className="fixed bottom-5 right-5 z-50 liquid-glass rounded-full px-3 py-2 flex items-center gap-2 text-neon text-[10px] font-mono uppercase tracking-widest">
+          <span className="flex gap-[2px] items-end h-3">
+            <span className="w-[2px] bg-neon animate-pulse" style={{ height: "60%" }} />
+            <span className="w-[2px] bg-neon animate-pulse" style={{ height: "100%", animationDelay: "0.15s" }} />
+            <span className="w-[2px] bg-neon animate-pulse" style={{ height: "40%", animationDelay: "0.3s" }} />
+          </span>
+          Now playing
+        </div>
+      )}
+
 
       <div className="relative max-w-4xl mx-auto px-5 sm:px-8 text-center">
         <motion.p

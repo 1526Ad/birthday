@@ -263,19 +263,30 @@ function Hero({ y }: { y: MotionValue<number> }) {
 
 // ---------- About ----------
 function About({ y }: { y: MotionValue<number> }) {
-  const videoY = useTransform(y, [400, 2000], [200, -200]);
-  const videoScale = useTransform(y, [400, 2000], [1.2, 1]);
-  const videoRotate = useTransform(y, [400, 2000], [2, -2]);
-  const headingY = useTransform(y, [400, 1600], [80, -40]);
+  const isMobile = useIsMobile();
+  const videoY = useTransform(y, [400, 2000], isMobile ? [80, -80] : [200, -200]);
+  const videoScale = useTransform(y, [400, 2000], isMobile ? [1.1, 1] : [1.2, 1]);
+  const videoRotate = useTransform(y, [400, 2000], isMobile ? [0, 0] : [2, -2]);
+  const headingY = useTransform(y, [400, 1600], isMobile ? [30, -15] : [80, -40]);
+  const onMove = useRafPointer();
+
+  const intro = "I'm Rahul — I design, ship and scale web products end-to-end. From pixel-perfect UI to APIs, databases & deploys.";
+  const words = intro.split(" ");
+
+  const pillars = [
+    { icon: Zap, k: "Design", v: "Pixel-perfect UI, motion, brand systems." },
+    { icon: Cpu, k: "Engineer", v: "TS everywhere, clean APIs, sane data." },
+    { icon: Rocket, k: "Ship", v: "CI/CD, edge, observability — calmly." },
+  ];
 
   return (
-    <section id="about" className="relative w-full overflow-hidden py-32 sm:py-44">
+    <section id="about" className="relative w-full overflow-hidden py-24 sm:py-44">
       <motion.div
         style={{ y: videoY, scale: videoScale, rotate: videoRotate }}
         className="absolute inset-0 -top-32 -bottom-32 will-change-transform"
       >
-        <LoopVideo src={VIDEOS.about} className="w-full h-full opacity-50" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#010828] via-[#010828]/60 to-[#010828]" />
+        <LoopVideo src={VIDEOS.about} className="w-full h-full opacity-40" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#010828] via-[#010828]/70 to-[#010828]" />
       </motion.div>
 
       <motion.div style={{ y: headingY }} className="relative max-w-6xl mx-auto px-5 sm:px-8">
@@ -289,51 +300,54 @@ function About({ y }: { y: MotionValue<number> }) {
           01 — About
         </motion.p>
 
+        {/* Animated word-by-word intro */}
         <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.4 }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] as const }}
-          className="font-grotesk uppercase text-cream text-[32px] sm:text-[56px] lg:text-[72px] leading-[1] max-w-4xl"
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ staggerChildren: 0.04 }}
+          className="font-grotesk uppercase text-cream text-[28px] sm:text-[52px] lg:text-[68px] leading-[1.05] max-w-5xl flex flex-wrap gap-x-[0.28em] gap-y-1"
         >
-          A full-stack dev who treats the{" "}
-          <span className="font-condiment normal-case text-neon mix-exclusion">
-            entire stack
-          </span>{" "}
-          as one craft.
+          {words.map((w, i) => {
+            const accent = ["Rahul", "design,", "ship", "scale", "end-to-end."].includes(w);
+            return (
+              <motion.span
+                key={i}
+                variants={{
+                  hidden: { opacity: 0, y: 24, filter: "blur(6px)" },
+                  show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } },
+                }}
+                className={accent ? "text-neon" : ""}
+              >
+                {w}
+              </motion.span>
+            );
+          })}
         </motion.h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 sm:gap-16 mt-16">
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="font-mono text-[13px] sm:text-[15px] leading-relaxed text-cream/80"
-          >
-            I'm Rahul — a self-taught full-stack engineer with 6+ years shipping web
-            products. I live in the seam between design and engineering: pushing pixels,
-            tuning queries, automating deploys, and obsessing over the small moments
-            that make software feel calm.
-          </motion.p>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="font-mono text-[13px] sm:text-[15px] leading-relaxed text-cream/60"
-          >
-            Today I build SaaS dashboards, AI-powered tools, and product surfaces for
-            founders & small teams. Quiet code, fast ships, no drama — pinged on
-            <a href={TELEGRAM} target="_blank" rel="noreferrer" className="text-neon hover:underline ml-1">
-              Telegram
-            </a>{" "}
-            when something interesting comes up.
-          </motion.p>
+        {/* Glass pillar cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-5 mt-12 sm:mt-20">
+          {pillars.map((p, i) => (
+            <motion.div
+              key={p.k}
+              onMouseMove={onMove}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.7, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] as const }}
+              className="glass-card rounded-3xl p-6 sm:p-8"
+            >
+              <div className="w-11 h-11 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-neon">
+                <p.icon size={18} />
+              </div>
+              <div className="font-grotesk uppercase text-cream text-xl sm:text-2xl mt-5">{p.k}</div>
+              <div className="font-mono text-[12px] sm:text-[13px] text-cream/60 mt-2 leading-relaxed">{p.v}</div>
+            </motion.div>
+          ))}
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-white/10 mt-20 rounded-2xl overflow-hidden">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-white/10 mt-12 sm:mt-20 rounded-2xl overflow-hidden">
           {[
             { k: "6+", v: "Years building" },
             { k: "40+", v: "Products shipped" },
@@ -346,9 +360,9 @@ function About({ y }: { y: MotionValue<number> }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.08 }}
-              className="bg-[#010828] p-6 sm:p-8"
+              className="bg-[#010828]/80 backdrop-blur-sm p-5 sm:p-8"
             >
-              <div className="font-grotesk text-cream text-[36px] sm:text-[52px] leading-none">
+              <div className="font-grotesk text-cream text-[32px] sm:text-[52px] leading-none">
                 {s.k}
               </div>
               <div className="font-mono text-[10px] sm:text-[11px] uppercase tracking-widest text-cream/50 mt-3">

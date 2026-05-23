@@ -378,9 +378,11 @@ function About({ y }: { y: MotionValue<number> }) {
 
 // ---------- Stack / Services ----------
 function Stack({ y }: { y: MotionValue<number> }) {
-  const headingY = useTransform(y, [1600, 3200], [60, -60]);
-  const blobY = useTransform(y, [1600, 3400], [-80, 80]);
+  const isMobile = useIsMobile();
+  const headingY = useTransform(y, [1600, 3200], isMobile ? [20, -20] : [60, -60]);
+  const blobY = useTransform(y, [1600, 3400], isMobile ? [-30, 30] : [-80, 80]);
   const blobRotate = useTransform(y, [1600, 3400], [-15, 15]);
+  const onMove = useRafPointer();
 
   const items = [
     {

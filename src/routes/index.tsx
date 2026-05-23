@@ -127,14 +127,13 @@ function Navbar() {
 
 // ---------- Hero ----------
 function Hero({ y }: { y: MotionValue<number> }) {
-  const videoY = useTransform(y, (v) => v * 0.45);
-  const videoScale = useTransform(y, [0, 900], [1.05, 1.35]);
-  const videoBlur = useTransform(y, [0, 700], [0, 8]);
-  const videoFilter = useTransform(videoBlur, (b) => `blur(${b}px)`);
-  const videoRotate = useTransform(y, [0, 900], [0, -3]);
-  const contentY = useTransform(y, (v) => v * -0.22);
+  const isMobile = useIsMobile();
+  const videoY = useTransform(y, (v) => v * (isMobile ? 0.25 : 0.45));
+  const videoScale = useTransform(y, [0, 900], isMobile ? [1.02, 1.12] : [1.05, 1.25]);
+  const videoRotate = useTransform(y, [0, 900], isMobile ? [0, 0] : [0, -2]);
+  const contentY = useTransform(y, (v) => v * (isMobile ? -0.1 : -0.22));
   const contentOpacity = useTransform(y, [0, 500], [1, 0]);
-  const contentScale = useTransform(y, [0, 500], [1, 0.92]);
+  const contentScale = useTransform(y, [0, 500], [1, 0.94]);
 
   const stagger = {
     hidden: { opacity: 0, y: 24 },
@@ -147,9 +146,9 @@ function Hero({ y }: { y: MotionValue<number> }) {
 
   return (
     <section id="home" className="relative min-h-screen w-full overflow-hidden">
-      {/* Parallax video bg */}
+      {/* Parallax video bg — no filter:blur (kills perf on mobile) */}
       <motion.div
-        style={{ y: videoY, scale: videoScale, rotate: videoRotate, filter: videoFilter }}
+        style={{ y: videoY, scale: videoScale, rotate: videoRotate }}
         className="absolute inset-0 will-change-transform"
       >
         <LoopVideo src={VIDEOS.hero} className="w-full h-full" />

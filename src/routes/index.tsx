@@ -189,15 +189,30 @@ function Hero({ y }: { y: MotionValue<number> }) {
         </motion.h1>
 
         <motion.p
-          variants={stagger}
-          custom={2}
           initial="hidden"
           animate="show"
-          className="mt-7 font-mono text-[12px] sm:text-sm uppercase text-cream/65 max-w-xl leading-relaxed"
+          transition={{ staggerChildren: 0.025, delayChildren: 0.5 }}
+          className="mt-7 font-mono text-[11px] sm:text-sm uppercase text-cream/70 max-w-xl leading-relaxed flex flex-wrap justify-center gap-x-[0.35em] gap-y-1 px-2"
         >
-          I'm Rahul — I design, ship and scale web products end-to-end.
-          From pixel-perfect UI to APIs, databases & deploys.
+          {"I'm Rahul — I design, ship and scale web products end-to-end. From pixel-perfect UI to APIs, databases & deploys."
+            .split(" ")
+            .map((w, i) => {
+              const hot = ["Rahul", "design,", "ship", "scale", "end-to-end."].includes(w);
+              return (
+                <motion.span
+                  key={i}
+                  variants={{
+                    hidden: { opacity: 0, y: 12, filter: "blur(4px)" },
+                    show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+                  }}
+                  className={hot ? "text-neon" : ""}
+                >
+                  {w}
+                </motion.span>
+              );
+            })}
         </motion.p>
+
 
         <motion.div
           variants={stagger}

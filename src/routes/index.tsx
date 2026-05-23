@@ -504,9 +504,10 @@ function Stack({ y }: { y: MotionValue<number> }) {
 
 // ---------- Contact ----------
 function Contact({ y }: { y: MotionValue<number> }) {
-  const videoY = useTransform(y, [2200, 4500], [180, -180]);
-  const videoScale = useTransform(y, [2200, 4500], [1.25, 1]);
-  const videoRotate = useTransform(y, [2200, 4500], [-2, 2]);
+  const isMobile = useIsMobile();
+  const videoY = useTransform(y, [2200, 4500], isMobile ? [70, -70] : [180, -180]);
+  const videoScale = useTransform(y, [2200, 4500], isMobile ? [1.1, 1] : [1.25, 1]);
+  const videoRotate = useTransform(y, [2200, 4500], isMobile ? [0, 0] : [-2, 2]);
 
   return (
     <section id="contact" className="relative w-full overflow-hidden py-32 sm:py-44">

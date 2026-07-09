@@ -35,7 +35,10 @@ function useIsMobile() {
 // ---------- Smooth parallax helpers ----------
 function useSmoothScroll() {
   const { scrollY } = useScroll();
-  return useSpring(scrollY, { stiffness: 120, damping: 28, mass: 0.35 });
+  const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 768px)").matches;
+  // On mobile, spring lag makes parallax feel broken — use raw scrollY.
+  const smooth = useSpring(scrollY, { stiffness: 200, damping: 30, mass: 0.2 });
+  return isMobile ? scrollY : smooth;
 }
 
 // rAF-throttled pointer handler for spotlight hover
@@ -578,6 +581,30 @@ function Footer() {
 function Index() {
   const smoothY = useSmoothScroll();
   const containerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const noMenu = (e: MouseEvent) => e.preventDefault();
+    const noCopy = (e: ClipboardEvent) => e.preventDefault();
+    const noKeys = (e: KeyboardEvent) => {
+      const k = e.key.toLowerCase();
+      if (e.key === "F12") return e.preventDefault();
+      if ((e.ctrlKey || e.metaKey) && ["u", "s", "c", "a", "p"].includes(k))
+        return e.preventDefault();
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && ["i", "j", "c"].includes(k))
+        return e.preventDefault();
+    };
+    document.addEventListener("contextmenu", noMenu);
+    document.addEventListener("copy", noCopy);
+    document.addEventListener("cut", noCopy);
+    document.addEventListener("keydown", noKeys);
+    return () => {
+      document.removeEventListener("contextmenu", noMenu);
+      document.removeEventListener("copy", noCopy);
+      document.removeEventListener("cut", noCopy);
+      document.removeEventListener("keydown", noKeys);
+    };
+  }, []);
+
 
   return (
     <main ref={containerRef} className="relative bg-space text-cream overflow-x-hidden">

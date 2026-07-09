@@ -114,11 +114,10 @@ function Navbar() {
             href={INSTAGRAM}
             target="_blank"
             rel="noreferrer"
-            className="group inline-flex items-center gap-2 rounded-full bg-cream text-[#010828] px-4 sm:px-5 py-2 font-grotesk text-[11px] uppercase tracking-widest hover:bg-neon transition"
+            className="group inline-flex items-center gap-2 rounded-full bg-neon text-[#010828] px-4 sm:px-5 py-2 font-grotesk text-[11px] uppercase tracking-widest hover:scale-[1.03] transition"
           >
-            <span className="hidden sm:inline">Say hi</span>
-            <span className="sm:hidden">Hi</span>
-            <ArrowUpRight size={14} className="group-hover:rotate-45 transition-transform" />
+            <Instagram size={14} />
+            <span>@nikkita._02</span>
           </a>
         </div>
       </div>

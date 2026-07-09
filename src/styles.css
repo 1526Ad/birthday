@@ -205,3 +205,25 @@ body::-webkit-scrollbar,
 * {
   scrollbar-width: none;
 }
+
+/* Prevent copy/select across the site */
+html, body {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+input, textarea, [contenteditable="true"] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+img, video {
+  -webkit-user-drag: none;
+  user-drag: none;
+  pointer-events: none;
+}
+a, button {
+  pointer-events: auto;
+}

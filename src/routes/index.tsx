@@ -35,7 +35,10 @@ function useIsMobile() {
 // ---------- Smooth parallax helpers ----------
 function useSmoothScroll() {
   const { scrollY } = useScroll();
-  return useSpring(scrollY, { stiffness: 120, damping: 28, mass: 0.35 });
+  const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 768px)").matches;
+  // On mobile, spring lag makes parallax feel broken — use raw scrollY.
+  const smooth = useSpring(scrollY, { stiffness: 200, damping: 30, mass: 0.2 });
+  return isMobile ? scrollY : smooth;
 }
 
 // rAF-throttled pointer handler for spotlight hover

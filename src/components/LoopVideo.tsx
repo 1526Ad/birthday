@@ -18,6 +18,7 @@ export function LoopVideo({
   poster,
 }: LoopVideoProps) {
   const ref = useRef<HTMLVideoElement>(null);
+  const visibleRef = useRef(priority);
   const [shouldLoad, setShouldLoad] = useState(priority);
   const [ready, setReady] = useState(false);
 
@@ -32,6 +33,7 @@ export function LoopVideo({
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
+          visibleRef.current = e.isIntersecting;
           if (e.isIntersecting) {
             setShouldLoad(true);
             if (video.readyState >= 2) tryPlay();
@@ -91,7 +93,7 @@ export function LoopVideo({
 
     const onReady = () => {
       setReady(true);
-      if (video.matches(":hover") || priority) video.play().catch(() => {});
+      if (visibleRef.current || priority) video.play().catch(() => {});
     };
     const onError = () => setReady(false);
 

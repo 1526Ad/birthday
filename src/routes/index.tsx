@@ -156,7 +156,7 @@ function Hero({ y }: { y: MotionValue<number> }) {
         style={{ y: videoY, scale: videoScale, rotate: videoRotate }}
         className="absolute inset-0 will-change-transform"
       >
-        <LoopVideo src={VIDEOS.hero} className="w-full h-full" />
+        <LoopVideo src={VIDEOS.hero} className="w-full h-full" priority />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-[#010828]/40 to-[#010828]" />
       </motion.div>
 

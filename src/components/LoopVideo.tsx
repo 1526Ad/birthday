@@ -5,19 +5,43 @@ interface LoopVideoProps {
   className?: string;
   fade?: boolean;
   objectFit?: "cover" | "contain" | "fill";
+  priority?: boolean;
 }
 
-export function LoopVideo({ src, className = "", fade = false, objectFit = "cover" }: LoopVideoProps) {
+export function LoopVideo({
+  src,
+  className = "",
+  fade = false,
+  objectFit = "cover",
+  priority = false,
+}: LoopVideoProps) {
   const ref = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const video = ref.current;
     if (!video) return;
     video.muted = true;
-    const tryPlay = () => video.play().catch(() => {});
-    tryPlay();
 
-    if (!fade) return;
+    const tryPlay = () => video.play().catch(() => {});
+
+    // Pause when offscreen — huge perf win when multiple videos share the page.
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) tryPlay();
+          else video.pause();
+        }
+      },
+      { threshold: 0.05 },
+    );
+    io.observe(video);
+
+    if (priority) tryPlay();
+
+    if (!fade) {
+      return () => io.disconnect();
+    }
+
     let raf = 0;
     const FADE = 0.5;
     const tick = () => {
@@ -45,18 +69,19 @@ export function LoopVideo({ src, className = "", fade = false, objectFit = "cove
     return () => {
       cancelAnimationFrame(raf);
       video.removeEventListener("ended", onEnded);
+      io.disconnect();
     };
-  }, [fade]);
+  }, [fade, priority]);
 
   return (
     <video
       ref={ref}
       src={src}
-      autoPlay
+      autoPlay={priority}
       loop={!fade}
       muted
       playsInline
-      preload="auto"
+      preload={priority ? "auto" : "metadata"}
       className={className}
       style={{ objectFit, opacity: fade ? 0 : 1, transition: fade ? undefined : "opacity .4s" }}
     />

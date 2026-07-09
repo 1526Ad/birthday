@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, useSpring, type MotionValue } from "framer-motion";
-import { Send, Mail, Github, ArrowUpRight, Code2, Layers, Database, Sparkles, Play, Zap, Cpu, Rocket } from "lucide-react";
+import { Send, Mail, Instagram, ArrowUpRight, Palette, GraduationCap, Sparkles, Camera, Gamepad2, Utensils, Plane, Brush } from "lucide-react";
 import { LoopVideo } from "@/components/LoopVideo";
 
 export const Route = createFileRoute("/")({
@@ -9,6 +9,7 @@ export const Route = createFileRoute("/")({
 });
 
 const TELEGRAM = "https://t.me/Darkbhaifan";
+const INSTAGRAM = "https://instagram.com/nikkita._02";
 
 const HERO_VIDEO = "https://files.catbox.moe/tcb686.mp4";
 const VIDEOS = {
@@ -16,10 +17,6 @@ const VIDEOS = {
   about: HERO_VIDEO,
   cta: HERO_VIDEO,
 };
-
-// Song that plays when user scrolls into the Contact section.
-// Replace with any direct .mp3 / .m4a / .ogg URL.
-const CONTACT_SONG = "https://files.catbox.moe/0d6vhe.mp3";
 
 // ---------- Mobile detection ----------
 function useIsMobile() {
@@ -71,7 +68,7 @@ function Navbar() {
 
   const links = [
     { label: "About", href: "#about" },
-    { label: "Stack", href: "#stack" },
+    { label: "Interests", href: "#stack" },
     { label: "Contact", href: "#contact" },
   ];
 
@@ -97,7 +94,7 @@ function Navbar() {
           }`}
         >
           <a href="#" className="flex items-center gap-2 text-cream">
-            <span className="font-grotesk uppercase text-base tracking-widest">Rahul</span>
+            <span className="font-grotesk uppercase text-base tracking-widest">Nikkita</span>
             <span className="w-1.5 h-1.5 rounded-full bg-neon shadow-[0_0_12px_#6FFF00]" />
           </a>
 
@@ -114,13 +111,13 @@ function Navbar() {
           </nav>
 
           <a
-            href={TELEGRAM}
+            href={INSTAGRAM}
             target="_blank"
             rel="noreferrer"
             className="group inline-flex items-center gap-2 rounded-full bg-cream text-[#010828] px-4 sm:px-5 py-2 font-grotesk text-[11px] uppercase tracking-widest hover:bg-neon transition"
           >
-            <span className="hidden sm:inline">Let's talk</span>
-            <span className="sm:hidden">Talk</span>
+            <span className="hidden sm:inline">Say hi</span>
+            <span className="sm:hidden">Hi</span>
             <ArrowUpRight size={14} className="group-hover:rotate-45 transition-transform" />
           </a>
         </div>
@@ -148,9 +145,10 @@ function Hero({ y }: { y: MotionValue<number> }) {
     }),
   } satisfies import("framer-motion").Variants;
 
+  const bio = "I'm Nikkita — an artist who sketches quiet worlds, chases sunsets, plays hard and cooks softer.";
+
   return (
     <section id="home" className="relative min-h-screen w-full overflow-hidden">
-      {/* Parallax video bg — no filter:blur (kills perf on mobile) */}
       <motion.div
         style={{ y: videoY, scale: videoScale, rotate: videoRotate }}
         className="absolute inset-0 will-change-transform"
@@ -171,7 +169,7 @@ function Hero({ y }: { y: MotionValue<number> }) {
           className="inline-flex items-center gap-2 rounded-full liquid-glass px-4 py-1.5 font-mono text-[10px] sm:text-[11px] uppercase tracking-widest text-cream/80"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-neon animate-pulse" />
-          Open for freelance · 2026
+          Artist · Dreamer · 2026
         </motion.div>
 
         <motion.h1
@@ -181,11 +179,11 @@ function Hero({ y }: { y: MotionValue<number> }) {
           animate="show"
           className="mt-8 font-grotesk uppercase text-cream text-[38px] sm:text-[72px] md:text-[96px] lg:text-[112px] leading-[0.92] tracking-[-0.02em] max-w-5xl"
         >
-          Full-stack dev<br />
+          Nikkita<br />
           <span className="font-condiment normal-case text-neon mix-exclusion -tracking-normal">
-            building
+            sketching
           </span>{" "}
-          quiet products
+          quiet worlds
         </motion.h1>
 
         <motion.p
@@ -194,25 +192,22 @@ function Hero({ y }: { y: MotionValue<number> }) {
           transition={{ staggerChildren: 0.025, delayChildren: 0.5 }}
           className="mt-7 font-mono text-[11px] sm:text-sm uppercase text-cream/70 max-w-xl leading-relaxed flex flex-wrap justify-center gap-x-[0.35em] gap-y-1 px-2"
         >
-          {"I'm Rahul — I design, ship and scale web products end-to-end. From pixel-perfect UI to APIs, databases & deploys."
-            .split(" ")
-            .map((w, i) => {
-              const hot = ["Rahul", "design,", "ship", "scale", "end-to-end."].includes(w);
-              return (
-                <motion.span
-                  key={i}
-                  variants={{
-                    hidden: { opacity: 0, y: 12, filter: "blur(4px)" },
-                    show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
-                  }}
-                  className={hot ? "text-neon" : ""}
-                >
-                  {w}
-                </motion.span>
-              );
-            })}
+          {bio.split(" ").map((w, i) => {
+            const hot = ["Nikkita", "sketches", "sunsets,", "cooks"].includes(w);
+            return (
+              <motion.span
+                key={i}
+                variants={{
+                  hidden: { opacity: 0, y: 12, filter: "blur(4px)" },
+                  show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+                }}
+                className={hot ? "text-neon" : ""}
+              >
+                {w}
+              </motion.span>
+            );
+          })}
         </motion.p>
-
 
         <motion.div
           variants={stagger}
@@ -228,16 +223,15 @@ function Hero({ y }: { y: MotionValue<number> }) {
             About me <ArrowUpRight size={16} />
           </a>
           <a
-            href={TELEGRAM}
+            href={INSTAGRAM}
             target="_blank"
             rel="noreferrer"
             className="liquid-glass inline-flex items-center gap-2 rounded-full px-6 sm:px-7 py-3.5 font-grotesk uppercase text-xs sm:text-sm tracking-widest text-cream hover:text-neon transition"
           >
-            <Play size={14} fill="currentColor" /> Telegram
+            <Instagram size={14} /> @nikkita._02
           </a>
         </motion.div>
 
-        {/* Stack marquee */}
         <motion.div
           variants={stagger}
           custom={4}
@@ -246,10 +240,10 @@ function Hero({ y }: { y: MotionValue<number> }) {
           className="mt-20 sm:mt-24 w-full max-w-3xl"
         >
           <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-cream/40 mb-5">
-            Daily drivers
+            A few of my loves
           </p>
           <div className="flex flex-wrap items-center justify-center gap-x-8 sm:gap-x-12 gap-y-3 font-grotesk uppercase text-sm sm:text-base text-cream/40">
-            {["React", "Next.js", "TypeScript", "Node", "Postgres", "Tailwind", "AWS"].map(
+            {["Sketching", "Cooking", "Travel", "Gaming", "Makeup", "Photography"].map(
               (t) => (
                 <span key={t} className="hover:text-cream transition-colors">
                   {t}
@@ -260,7 +254,6 @@ function Hero({ y }: { y: MotionValue<number> }) {
         </motion.div>
       </motion.div>
 
-      {/* Scroll cue */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -289,13 +282,13 @@ function About({ y }: { y: MotionValue<number> }) {
   const headingY = useTransform(y, [400, 1600], isMobile ? [30, -15] : [80, -40]);
   const onMove = useRafPointer();
 
-  const intro = "I'm Rahul — I design, ship and scale web products end-to-end. From pixel-perfect UI to APIs, databases & deploys.";
+  const intro = "I'm Nikkita Kashyap — an artist, a graduate, and a quiet overthinker who finds calm in a sketchbook.";
   const words = intro.split(" ");
 
   const pillars = [
-    { icon: Zap, k: "Design", v: "Pixel-perfect UI, motion, brand systems." },
-    { icon: Cpu, k: "Engineer", v: "TS everywhere, clean APIs, sane data." },
-    { icon: Rocket, k: "Ship", v: "CI/CD, edge, observability — calmly." },
+    { icon: Palette, k: "Art & Sketching", v: "Pencil, ink, portraits — a language for feelings I can't quite say." },
+    { icon: GraduationCap, k: "Graduate", v: "Curious mind, still learning. School ended, growing didn't." },
+    { icon: Sparkles, k: "Introvert · Overthinker", v: "Small circle, loud thoughts, soft heart. Recharging beats crowds." },
   ];
 
   return (
@@ -319,7 +312,6 @@ function About({ y }: { y: MotionValue<number> }) {
           01 — About
         </motion.p>
 
-        {/* Animated word-by-word intro */}
         <motion.h2
           initial="hidden"
           whileInView="show"
@@ -328,7 +320,7 @@ function About({ y }: { y: MotionValue<number> }) {
           className="font-grotesk uppercase text-cream text-[28px] sm:text-[52px] lg:text-[68px] leading-[1.05] max-w-5xl flex flex-wrap gap-x-[0.28em] gap-y-1"
         >
           {words.map((w, i) => {
-            const accent = ["Rahul", "design,", "ship", "scale", "end-to-end."].includes(w);
+            const accent = ["Nikkita", "Kashyap", "artist,", "overthinker", "sketchbook."].includes(w);
             return (
               <motion.span
                 key={i}
@@ -344,7 +336,6 @@ function About({ y }: { y: MotionValue<number> }) {
           })}
         </motion.h2>
 
-        {/* Glass pillar cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-5 mt-12 sm:mt-20">
           {pillars.map((p, i) => (
             <motion.div
@@ -364,38 +355,12 @@ function About({ y }: { y: MotionValue<number> }) {
             </motion.div>
           ))}
         </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-white/10 mt-12 sm:mt-20 rounded-2xl overflow-hidden">
-          {[
-            { k: "6+", v: "Years building" },
-            { k: "40+", v: "Products shipped" },
-            { k: "12", v: "Open-source repos" },
-            { k: "∞", v: "Coffees brewed" },
-          ].map((s, i) => (
-            <motion.div
-              key={s.v}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
-              className="bg-[#010828]/80 backdrop-blur-sm p-5 sm:p-8"
-            >
-              <div className="font-grotesk text-cream text-[32px] sm:text-[52px] leading-none">
-                {s.k}
-              </div>
-              <div className="font-mono text-[10px] sm:text-[11px] uppercase tracking-widest text-cream/50 mt-3">
-                {s.v}
-              </div>
-            </motion.div>
-          ))}
-        </div>
       </motion.div>
     </section>
   );
 }
 
-// ---------- Stack / Services ----------
+// ---------- Interests ----------
 function Stack({ y }: { y: MotionValue<number> }) {
   const isMobile = useIsMobile();
   const headingY = useTransform(y, [1600, 3200], isMobile ? [20, -20] : [60, -60]);
@@ -405,39 +370,47 @@ function Stack({ y }: { y: MotionValue<number> }) {
 
   const items = [
     {
-      icon: Layers,
-      title: "Frontend",
-      desc: "React, Next.js, TypeScript, Tailwind, Framer Motion. Pixel-perfect, fast, accessible.",
-      tags: ["React", "Next.js", "Tailwind", "Framer"],
+      icon: Utensils,
+      title: "Cooking",
+      desc: "Slow kitchens, warm spices, feeding the people I love — my favorite kind of art.",
+      tags: ["Home chef", "Baking", "Comfort food"],
     },
     {
-      icon: Database,
-      title: "Backend & data",
-      desc: "Node, Postgres, Supabase, Redis. Clean APIs, sane schemas, real-time when needed.",
-      tags: ["Node", "Postgres", "Supabase", "tRPC"],
+      icon: Plane,
+      title: "Travelling",
+      desc: "Wandering new streets, chasing skies, collecting cities like polaroids in my head.",
+      tags: ["Wander", "Mountains", "Sunsets"],
     },
     {
-      icon: Sparkles,
-      title: "AI & automation",
-      desc: "OpenAI, vector search, custom agents. Wiring LLMs into real product workflows.",
-      tags: ["OpenAI", "RAG", "LangChain", "Agents"],
+      icon: Gamepad2,
+      title: "Gaming",
+      desc: "Cozy nights, open worlds, quiet victories. My favorite escape after a long day.",
+      tags: ["Chill", "Story", "Adventure"],
     },
     {
-      icon: Code2,
-      title: "Ship & scale",
-      desc: "Vercel, Cloudflare, AWS, CI/CD. From localhost to a million requests, calmly.",
-      tags: ["Vercel", "AWS", "Docker", "CI/CD"],
+      icon: Brush,
+      title: "Self Makeup",
+      desc: "Face as a canvas — sometimes soft glam, sometimes bold. Always a mood.",
+      tags: ["Glam", "Everyday", "Mood"],
+    },
+    {
+      icon: Camera,
+      title: "Photography",
+      desc: "Framing tiny moments — light on a wall, a stranger's laugh, the sky at 7 PM.",
+      tags: ["Portrait", "Street", "Golden hour"],
+    },
+    {
+      icon: Palette,
+      title: "Art Sketching",
+      desc: "The one I always come back to. Pencils, patience, and pieces of a quiet mind.",
+      tags: ["Pencil", "Ink", "Portrait"],
     },
   ];
 
-  const marquee = ["Quiet code", "Fast ships", "End-to-end", "No drama", "Async friendly", "Time-zone friendly"];
-
-
-
+  const marquee = ["Overthinker", "Introvert", "Artist", "Dreamer", "Soft-hearted", "Curious"];
 
   return (
     <section id="stack" className="relative bg-space py-24 sm:py-40 overflow-hidden">
-      {/* Parallax blob */}
       <motion.div
         style={{ y: blobY, rotate: blobRotate }}
         className="pointer-events-none absolute -right-32 top-20 w-[520px] h-[520px] rounded-full bg-neon/10 blur-[120px]"
@@ -447,17 +420,17 @@ function Stack({ y }: { y: MotionValue<number> }) {
       <div className="relative max-w-6xl mx-auto px-5 sm:px-8">
         <motion.div style={{ y: headingY }} className="mb-14 sm:mb-20">
           <p className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.3em] text-neon mb-5">
-            02 — Stack
+            02 — Interests
           </p>
           <h2 className="font-grotesk uppercase text-cream text-[32px] sm:text-[56px] lg:text-[80px] leading-[0.95] max-w-3xl">
-            End-to-end,{" "}
+            Little things,{" "}
             <span className="font-condiment normal-case text-neon mix-exclusion">
-              honestly
+              big joys
             </span>
             .
           </h2>
           <p className="mt-6 font-mono text-[12px] sm:text-sm uppercase tracking-widest text-cream/50 max-w-xl">
-            One brain across design, code, data and deploys — fewer hand-offs, more momentum.
+            The tiny universes I run into whenever real life gets too loud.
           </p>
         </motion.div>
 
@@ -500,7 +473,6 @@ function Stack({ y }: { y: MotionValue<number> }) {
           ))}
         </div>
 
-        {/* Marquee strip */}
         <div className="mt-16 sm:mt-24 relative overflow-hidden border-y border-white/10 py-5">
           <div className="marquee font-grotesk uppercase text-cream/70 text-2xl sm:text-4xl tracking-wide">
             {[...marquee, ...marquee].map((m, i) => (
@@ -518,9 +490,6 @@ function Stack({ y }: { y: MotionValue<number> }) {
   );
 }
 
-// Work section removed per request.
-
-
 // ---------- Contact ----------
 function Contact({ y }: { y: MotionValue<number> }) {
   const isMobile = useIsMobile();
@@ -528,42 +497,8 @@ function Contact({ y }: { y: MotionValue<number> }) {
   const videoScale = useTransform(y, [2200, 4500], isMobile ? [1.1, 1] : [1.25, 1]);
   const videoRotate = useTransform(y, [2200, 4500], isMobile ? [0, 0] : [-2, 2]);
 
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const sectionRef = useRef<HTMLElement>(null);
-  const [needsTap, setNeedsTap] = useState(false);
-  const [playing, setPlaying] = useState(false);
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    const node = sectionRef.current;
-    if (!audio || !node) return;
-    audio.volume = 0.55;
-
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          audio.play().then(() => setPlaying(true)).catch(() => setNeedsTap(true));
-        } else {
-          audio.pause();
-          setPlaying(false);
-        }
-      },
-      { threshold: 0.35 }
-    );
-    io.observe(node);
-    return () => io.disconnect();
-  }, []);
-
-  const tapToPlay = () => {
-    audioRef.current?.play().then(() => {
-      setPlaying(true);
-      setNeedsTap(false);
-    }).catch(() => {});
-  };
-
   return (
-    <section ref={sectionRef} id="contact" className="relative w-full overflow-hidden py-32 sm:py-44">
-      <audio ref={audioRef} src={CONTACT_SONG} loop preload="auto" />
+    <section id="contact" className="relative w-full overflow-hidden py-32 sm:py-44">
       <motion.div
         style={{ y: videoY, scale: videoScale, rotate: videoRotate }}
         className="absolute inset-0 -top-32 -bottom-32 will-change-transform"
@@ -571,26 +506,6 @@ function Contact({ y }: { y: MotionValue<number> }) {
         <LoopVideo src={VIDEOS.cta} className="w-full h-full opacity-40" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#010828] via-[#010828]/50 to-[#010828]" />
       </motion.div>
-
-      {needsTap && (
-        <button
-          onClick={tapToPlay}
-          className="fixed bottom-5 right-5 z-50 liquid-glass rounded-full px-4 py-3 flex items-center gap-2 text-cream text-xs font-mono uppercase tracking-widest hover:text-neon transition"
-        >
-          <Play size={14} /> Play song
-        </button>
-      )}
-      {playing && (
-        <div className="fixed bottom-5 right-5 z-50 liquid-glass rounded-full px-3 py-2 flex items-center gap-2 text-neon text-[10px] font-mono uppercase tracking-widest">
-          <span className="flex gap-[2px] items-end h-3">
-            <span className="w-[2px] bg-neon animate-pulse" style={{ height: "60%" }} />
-            <span className="w-[2px] bg-neon animate-pulse" style={{ height: "100%", animationDelay: "0.15s" }} />
-            <span className="w-[2px] bg-neon animate-pulse" style={{ height: "40%", animationDelay: "0.3s" }} />
-          </span>
-          Now playing
-        </div>
-      )}
-
 
       <div className="relative max-w-4xl mx-auto px-5 sm:px-8 text-center">
         <motion.p
@@ -600,7 +515,7 @@ function Contact({ y }: { y: MotionValue<number> }) {
           transition={{ duration: 0.6 }}
           className="font-condiment text-neon text-3xl sm:text-5xl mix-exclusion -rotate-2"
         >
-          let's talk
+          say hi
         </motion.p>
         <motion.h2
           initial={{ opacity: 0, y: 30 }}
@@ -609,7 +524,7 @@ function Contact({ y }: { y: MotionValue<number> }) {
           transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] as const }}
           className="font-grotesk uppercase text-cream text-[40px] sm:text-[72px] lg:text-[96px] leading-[0.95] mt-4"
         >
-          Got an idea?<br />Ping me on Telegram.
+          Let's be<br />internet friends.
         </motion.h2>
         <motion.p
           initial={{ opacity: 0, y: 16 }}
@@ -618,8 +533,7 @@ function Contact({ y }: { y: MotionValue<number> }) {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="font-mono text-[12px] sm:text-sm uppercase text-cream/60 mt-8 max-w-xl mx-auto leading-relaxed"
         >
-          Currently taking on a few new freelance & contract projects for Q2.
-          Async-friendly, time-zone friendly, drama-free.
+          Slide into my DMs — sketches, sunsets, movie recs, or just a soft hello. I read everything.
         </motion.p>
 
         <motion.div
@@ -630,26 +544,28 @@ function Contact({ y }: { y: MotionValue<number> }) {
           className="mt-12 flex flex-wrap items-center justify-center gap-3"
         >
           <a
-            href={TELEGRAM}
+            href={INSTAGRAM}
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center gap-2 bg-neon text-[#010828] font-grotesk uppercase text-xs sm:text-sm tracking-widest rounded-full px-7 py-4 hover:scale-[1.03] transition"
           >
-            <Send size={16} /> Message on Telegram
+            <Instagram size={16} /> @nikkita._02
           </a>
           <a
-            href="mailto:hello@rahul.dev"
+            href={TELEGRAM}
+            target="_blank"
+            rel="noreferrer"
             className="liquid-glass inline-flex items-center gap-2 rounded-full px-7 py-4 font-grotesk uppercase text-xs sm:text-sm tracking-widest text-cream hover:text-neon transition"
           >
-            <Mail size={16} /> Email
+            <Send size={16} /> Telegram
           </a>
         </motion.div>
 
         <div className="mt-16 flex items-center justify-center gap-3">
           {[
+            { href: INSTAGRAM, icon: Instagram, label: "Instagram" },
             { href: TELEGRAM, icon: Send, label: "Telegram" },
-            { href: "mailto:hello@rahul.dev", icon: Mail, label: "Email" },
-            { href: "https://github.com", icon: Github, label: "GitHub" },
+            { href: "mailto:hello@nikkita.art", icon: Mail, label: "Email" },
           ].map((s) => (
             <a
               key={s.label}
@@ -674,10 +590,10 @@ function Footer() {
     <footer className="bg-space border-t border-white/5">
       <div className="max-w-6xl mx-auto px-5 sm:px-8 py-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="font-grotesk uppercase text-cream/80 tracking-widest text-sm">
-          Rahul<span className="text-neon">.</span> · Full-stack dev
+          Nikkita Kashyap<span className="text-neon">.</span> · Artist
         </div>
         <div className="font-mono text-[10px] uppercase tracking-widest text-cream/40">
-          © {new Date().getFullYear()} · Built quietly, shipped fast.
+          © {new Date().getFullYear()} · Sketched softly, shipped quietly.
         </div>
       </div>
     </footer>
@@ -696,7 +612,6 @@ function Index() {
       <Hero y={smoothY} />
       <About y={smoothY} />
       <Stack y={smoothY} />
-      {/* Work section removed */}
       <Contact y={smoothY} />
       <Footer />
     </main>

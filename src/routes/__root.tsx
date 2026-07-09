@@ -86,6 +86,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "preload", as: "image", href: "/media/nikkita-poster.jpg", fetchPriority: "high" },
+      { rel: "preload", as: "video", href: "/media/nikkita-hero.mp4", type: "video/mp4" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {

@@ -12,7 +12,8 @@ export const Route = createFileRoute("/")({
 const INSTAGRAM_USER = "nikkita._02";
 const INSTAGRAM = `https://instagram.com/${INSTAGRAM_USER}`;
 
-const HERO_VIDEO = "https://files.catbox.moe/tcb686.mp4";
+const HERO_VIDEO = "/media/nikkita-hero.mp4";
+const VIDEO_POSTER = "/media/nikkita-poster.jpg";
 const VIDEOS = {
   hero: HERO_VIDEO,
   about: HERO_VIDEO,
@@ -156,7 +157,7 @@ function Hero({ y }: { y: MotionValue<number> }) {
         style={{ y: videoY, scale: videoScale, rotate: videoRotate }}
         className="absolute inset-0 will-change-transform"
       >
-        <LoopVideo src={VIDEOS.hero} className="w-full h-full" priority />
+        <LoopVideo src={VIDEOS.hero} poster={VIDEO_POSTER} className="w-full h-full" priority />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-[#010828]/40 to-[#010828]" />
       </motion.div>
 
@@ -300,7 +301,7 @@ function About({ y }: { y: MotionValue<number> }) {
         style={{ y: videoY, scale: videoScale, rotate: videoRotate }}
         className="absolute inset-0 -top-32 -bottom-32 will-change-transform"
       >
-        <LoopVideo src={VIDEOS.about} className="w-full h-full opacity-40" />
+        <LoopVideo src={VIDEOS.about} poster={VIDEO_POSTER} className="w-full h-full opacity-40" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#010828] via-[#010828]/70 to-[#010828]" />
       </motion.div>
 
@@ -506,7 +507,7 @@ function Contact({ y }: { y: MotionValue<number> }) {
         style={{ y: videoY, scale: videoScale, rotate: videoRotate }}
         className="absolute inset-0 -top-32 -bottom-32 will-change-transform"
       >
-        <LoopVideo src={VIDEOS.cta} className="w-full h-full opacity-40" />
+        <LoopVideo src={VIDEOS.cta} poster={VIDEO_POSTER} className="w-full h-full opacity-40" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#010828] via-[#010828]/50 to-[#010828]" />
       </motion.div>
 

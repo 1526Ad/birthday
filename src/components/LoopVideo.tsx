@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface LoopVideoProps {
   src: string;
@@ -6,6 +6,7 @@ interface LoopVideoProps {
   fade?: boolean;
   objectFit?: "cover" | "contain" | "fill";
   priority?: boolean;
+  poster?: string;
 }
 
 export function LoopVideo({
@@ -14,29 +15,40 @@ export function LoopVideo({
   fade = false,
   objectFit = "cover",
   priority = false,
+  poster,
 }: LoopVideoProps) {
   const ref = useRef<HTMLVideoElement>(null);
+  const [shouldLoad, setShouldLoad] = useState(priority);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const video = ref.current;
     if (!video) return;
     video.muted = true;
+    video.defaultMuted = true;
 
     const tryPlay = () => video.play().catch(() => {});
 
-    // Pause when offscreen — huge perf win when multiple videos share the page.
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
-          if (e.isIntersecting) tryPlay();
-          else video.pause();
+          if (e.isIntersecting) {
+            setShouldLoad(true);
+            if (video.readyState >= 2) tryPlay();
+          } else if (!priority) {
+            video.pause();
+          }
         }
       },
-      { threshold: 0.05 },
+      { rootMargin: "360px 0px", threshold: 0.01 },
     );
     io.observe(video);
 
-    if (priority) tryPlay();
+    if (priority) {
+      setShouldLoad(true);
+      video.load();
+      tryPlay();
+    }
 
     if (!fade) {
       return () => io.disconnect();
@@ -73,17 +85,49 @@ export function LoopVideo({
     };
   }, [fade, priority]);
 
+  useEffect(() => {
+    const video = ref.current;
+    if (!video || !shouldLoad) return;
+
+    const onReady = () => {
+      setReady(true);
+      if (video.matches(":hover") || priority) video.play().catch(() => {});
+    };
+    const onError = () => setReady(false);
+
+    video.addEventListener("loadeddata", onReady, { once: true });
+    video.addEventListener("canplay", onReady, { once: true });
+    video.addEventListener("error", onError);
+    video.load();
+
+    return () => {
+      video.removeEventListener("loadeddata", onReady);
+      video.removeEventListener("canplay", onReady);
+      video.removeEventListener("error", onError);
+    };
+  }, [priority, shouldLoad, src]);
+
   return (
     <video
       ref={ref}
-      src={src}
+      src={shouldLoad ? src : undefined}
       autoPlay={priority}
       loop={!fade}
       muted
       playsInline
+      poster={poster}
       preload={priority ? "auto" : "metadata"}
+      controls={false}
+      disablePictureInPicture
       className={className}
-      style={{ objectFit, opacity: fade ? 0 : 1, transition: fade ? undefined : "opacity .4s" }}
+      style={{
+        objectFit,
+        opacity: fade ? 0 : ready ? 1 : 0,
+        transition: fade ? undefined : "opacity .4s ease",
+        backgroundImage: poster ? `url(${poster})` : undefined,
+        backgroundSize: objectFit,
+        backgroundPosition: "center",
+      }}
     />
   );
 }

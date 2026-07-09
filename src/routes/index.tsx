@@ -9,7 +9,8 @@ export const Route = createFileRoute("/")({
 });
 
 
-const INSTAGRAM = "https://www.instagram.com/nikkita._02/?utm_source=ig_web_button_share_sheet";
+const INSTAGRAM_USER = "nikkita._02";
+const INSTAGRAM = `https://instagram.com/${INSTAGRAM_USER}`;
 
 const HERO_VIDEO = "https://files.catbox.moe/tcb686.mp4";
 const VIDEOS = {

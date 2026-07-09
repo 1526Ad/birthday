@@ -567,7 +567,7 @@ function Footer() {
           Nikkita Kashyap<span className="text-neon">.</span> · Artist
         </div>
         <div className="font-mono text-[10px] uppercase tracking-widest text-cream/40">
-          © {new Date().getFullYear()} · Sketched softly, shipped quietly.
+          © {new Date().getFullYear()} · Nikkita
         </div>
       </div>
     </footer>

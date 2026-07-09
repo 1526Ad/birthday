@@ -189,3 +189,19 @@
 .animate-fade-rise-delay-2 {
   animation: fade-rise 0.9s ease-out 0.4s both;
 }
+
+/* Hide scrollbars globally */
+html {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+* {
+  scrollbar-width: none;
+}

@@ -8,7 +8,7 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const TELEGRAM = "https://t.me/Darkbhaifan";
+
 const INSTAGRAM = "https://instagram.com/nikkita._02";
 
 const HERO_VIDEO = "https://files.catbox.moe/tcb686.mp4";

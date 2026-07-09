@@ -551,34 +551,8 @@ function Contact({ y }: { y: MotionValue<number> }) {
           >
             <Instagram size={16} /> @nikkita._02
           </a>
-          <a
-            href={TELEGRAM}
-            target="_blank"
-            rel="noreferrer"
-            className="liquid-glass inline-flex items-center gap-2 rounded-full px-7 py-4 font-grotesk uppercase text-xs sm:text-sm tracking-widest text-cream hover:text-neon transition"
-          >
-            <Send size={16} /> Telegram
-          </a>
         </motion.div>
 
-        <div className="mt-16 flex items-center justify-center gap-3">
-          {[
-            { href: INSTAGRAM, icon: Instagram, label: "Instagram" },
-            { href: TELEGRAM, icon: Send, label: "Telegram" },
-            { href: "mailto:hello@nikkita.art", icon: Mail, label: "Email" },
-          ].map((s) => (
-            <a
-              key={s.label}
-              href={s.href}
-              target="_blank"
-              rel="noreferrer"
-              aria-label={s.label}
-              className="liquid-glass w-12 h-12 rounded-full flex items-center justify-center text-cream hover:text-neon transition"
-            >
-              <s.icon size={16} />
-            </a>
-          ))}
-        </div>
       </div>
     </section>
   );

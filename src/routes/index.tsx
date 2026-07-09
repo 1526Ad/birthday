@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, useSpring, type MotionValue } from "framer-motion";
-import { Send, Mail, Instagram, ArrowUpRight, Palette, GraduationCap, Sparkles, Play, Camera, Gamepad2, Utensils, Plane, Brush } from "lucide-react";
+import { Send, Mail, Instagram, ArrowUpRight, Palette, GraduationCap, Sparkles, Camera, Gamepad2, Utensils, Plane, Brush } from "lucide-react";
 import { LoopVideo } from "@/components/LoopVideo";
 
 export const Route = createFileRoute("/")({

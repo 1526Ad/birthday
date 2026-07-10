@@ -2,9 +2,6 @@
 
 A cinematic, dark-themed personal portfolio for **Nikkita Kashyap** — art sketcher, graduate, and quiet creator. Built with a video-first hero, glassmorphism UI, and buttery parallax scrolling.
 
-🔗 **Live:** [nikkitakashyap.lovable.app](https://nikkitakashyap.lovable.app)  
-📸 **Instagram:** [@nikkita._02](https://www.instagram.com/nikkita._02)
-
 ---
 
 ## ✨ Features

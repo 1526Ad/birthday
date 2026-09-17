@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, RefreshCw, Heart, PartyPopper } from "lucide-react";
+import { Sparkles, RefreshCw, PartyPopper, Cake } from "lucide-react";
 import { triggerBirthdayCelebration } from "./ConfettiCannon";
 
 // Web Audio API harmonic chime for candle blow-out
@@ -335,7 +335,7 @@ export function VirtualCake() {
                 className="glass-card rounded-3xl p-7 sm:p-10 mt-10 max-w-2xl text-center border border-neon/30 shadow-[0_0_50px_rgba(111,255,0,0.15)]"
               >
                 <div className="w-12 h-12 mx-auto rounded-full bg-neon/10 border border-neon/30 flex items-center justify-center text-neon mb-5">
-                  <Heart size={22} className="fill-neon/30" />
+                  <Sparkles size={22} />
                 </div>
 
                 <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-neon mb-2">
@@ -354,10 +354,7 @@ export function VirtualCake() {
 
                 <div className="mt-6 pt-5 border-t border-white/10 flex items-center justify-between text-cream/50 font-mono text-[10px] tracking-widest uppercase">
                   <span className="text-neon font-bold">From: SHNWAZ</span>
-                  <span className="inline-flex items-center gap-1.5 text-neon">
-                    <Heart size={12} className="fill-neon" /> To: Khushi
-                  </span>
-                  <span>With All My Heart</span>
+                  <span className="text-neon font-bold">To: Khushi</span>
                 </div>
               </motion.div>
             )}

@@ -78,7 +78,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "Happy Birthday Khushi! Celebrating another beautiful year of joy, smiles, and dreams.",
       },
-      { name: "author", content: "Rahul" },
+      { name: "author", content: "SHNWAZ" },
       { property: "og:title", content: "Happy Birthday Khushi" },
       {
         property: "og:description",
@@ -92,16 +92,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         name: "twitter:description",
         content:
           "Happy Birthday Khushi! Celebrating another beautiful year of joy, smiles, and dreams.",
-      },
-      {
-        property: "og:image",
-        content:
-          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/44f32f21-59d4-447c-a0a8-557b22000680",
-      },
-      {
-        name: "twitter:image",
-        content:
-          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/44f32f21-59d4-447c-a0a8-557b22000680",
       },
     ],
     links: [

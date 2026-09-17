@@ -2,9 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Send,
-  Heart,
   Sparkles,
-  MessageSquareHeart,
+  MessageSquare,
   User,
   Cake,
   Star,
@@ -12,6 +11,7 @@ import {
   PartyPopper,
   Sun,
   Smile,
+  Crown,
   type LucideIcon,
 } from "lucide-react";
 import { triggerBirthdayCelebration } from "./ConfettiCannon";
@@ -25,7 +25,7 @@ interface Wish {
 }
 
 const STAMP_ICONS: Record<string, LucideIcon> = {
-  heart: Heart,
+  crown: Crown,
   cake: Cake,
   sparkles: Sparkles,
   star: Star,
@@ -33,6 +33,7 @@ const STAMP_ICONS: Record<string, LucideIcon> = {
   celebrate: PartyPopper,
   sun: Sun,
   smile: Smile,
+  heart: Sparkles,
 };
 
 const DEFAULT_WISHES: Wish[] = [
@@ -41,7 +42,7 @@ const DEFAULT_WISHES: Wish[] = [
     name: "ZAHER",
     message:
       "Happy Birthday Khushi! Wishing you a fantastic year ahead filled with good health, success, and endless reasons to smile.",
-    iconId: "heart",
+    iconId: "sparkles",
     date: "Special Delivery",
   },
   {
@@ -49,7 +50,7 @@ const DEFAULT_WISHES: Wish[] = [
     name: "BROKEN HEART",
     message:
       "Wishing you the happiest birthday Khushi! May your smile never fade and may all your dreams turn into reality.",
-    iconId: "sparkles",
+    iconId: "crown",
     date: "Warmest Regards",
   },
   {
@@ -71,9 +72,9 @@ const DEFAULT_WISHES: Wish[] = [
 ];
 
 const STAMP_LIST = [
-  { id: "heart", icon: Heart },
   { id: "cake", icon: Cake },
   { id: "sparkles", icon: Sparkles },
+  { id: "crown", icon: Crown },
   { id: "star", icon: Star },
   { id: "gift", icon: Gift },
   { id: "celebrate", icon: PartyPopper },
@@ -202,7 +203,7 @@ export function WishWall() {
           <div className="lg:col-span-5 glass-card rounded-3xl p-6 sm:p-8">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-neon">
-                <MessageSquareHeart size={18} />
+                <MessageSquare size={18} />
               </div>
               <div>
                 <h3 className="font-grotesk uppercase text-cream text-lg tracking-wider">
@@ -327,7 +328,7 @@ export function WishWall() {
                           </div>
                         </div>
 
-                        <Heart
+                        <Sparkles
                           size={14}
                           className="text-cream/30 group-hover:text-neon transition-colors"
                         />

@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, useSpring, type MotionValue } from "framer-motion";
-import { Sparkles, PartyPopper, Cake, Heart, MessageSquare } from "lucide-react";
+import { Sparkles, PartyPopper, Cake, MessageSquare } from "lucide-react";
 import { LoopVideo } from "@/components/LoopVideo";
 import { ConfettiCanvas, triggerBirthdayCelebration } from "@/components/birthday/ConfettiCannon";
 import { VirtualCake } from "@/components/birthday/VirtualCake";
@@ -259,14 +259,11 @@ function Hero({ y }: { y: MotionValue<number> }) {
 function Footer() {
   return (
     <footer className="bg-space border-t border-white/5 py-10">
-      <div className="max-w-6xl mx-auto px-5 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="max-w-6xl mx-auto px-5 sm:px-8 flex items-center justify-center">
         <div className="font-grotesk uppercase text-cream/80 tracking-widest text-sm flex items-center gap-2">
           <span>Happy Birthday Khushi</span>
           <span className="w-1 h-1 rounded-full bg-neon" />
           <span className="text-neon">2026</span>
-        </div>
-        <div className="font-mono text-[10px] uppercase tracking-widest text-cream/40">
-          Made With Love For Khushi
         </div>
       </div>
     </footer>

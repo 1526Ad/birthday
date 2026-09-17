@@ -1,0 +1,30 @@
+[
+  {
+    "id": "w-1",
+    "name": "ZAHER",
+    "message": "Happy Birthday Khushi! Wishing you a fantastic year ahead filled with good health, success, and endless reasons to smile.",
+    "iconId": "heart",
+    "date": "Special Delivery"
+  },
+  {
+    "id": "w-2",
+    "name": "BROKEN HEART",
+    "message": "Wishing you the happiest birthday Khushi! May your smile never fade and may all your dreams turn into reality.",
+    "iconId": "sparkles",
+    "date": "Warmest Regards"
+  },
+  {
+    "id": "w-3",
+    "name": "ADARSH",
+    "message": "Happy Birthday Khushi! Keep shining bright, achieving great things, and spreading your wonderful positive energy everywhere.",
+    "iconId": "star",
+    "date": "Birthday Morning"
+  },
+  {
+    "id": "w-4",
+    "name": "SHNWAZ",
+    "message": "Happy Birthday Khushi! May this year bring you immense peace, boundless laughter, and all the joy you truly deserve.",
+    "iconId": "cake",
+    "date": "Always"
+  }
+]

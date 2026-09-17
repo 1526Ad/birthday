@@ -72,17 +72,37 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "nikkita" },
-      { name: "description", content: "I'm Nikkita Kashyap" },
+      { title: "Happy Birthday Khushi" },
+      {
+        name: "description",
+        content:
+          "Happy Birthday Khushi! Celebrating another beautiful year of joy, smiles, and dreams.",
+      },
       { name: "author", content: "Rahul" },
-      { property: "og:title", content: "nikkita" },
-      { property: "og:description", content: "I'm Nikkita Kashyap" },
+      { property: "og:title", content: "Happy Birthday Khushi" },
+      {
+        property: "og:description",
+        content:
+          "Happy Birthday Khushi! Celebrating another beautiful year of joy, smiles, and dreams.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "nikkita" },
-      { name: "twitter:description", content: "I'm Nikkita Kashyap" },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/44f32f21-59d4-447c-a0a8-557b22000680" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/44f32f21-59d4-447c-a0a8-557b22000680" },
+      { name: "twitter:title", content: "Happy Birthday Khushi" },
+      {
+        name: "twitter:description",
+        content:
+          "Happy Birthday Khushi! Celebrating another beautiful year of joy, smiles, and dreams.",
+      },
+      {
+        property: "og:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/44f32f21-59d4-447c-a0a8-557b22000680",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/44f32f21-59d4-447c-a0a8-557b22000680",
+      },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
